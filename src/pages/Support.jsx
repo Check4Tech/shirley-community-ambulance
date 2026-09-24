@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { donationUses, fundraiser, org } from '../data/site'
 import { CtaBand, PageHero } from '../components/UI'
 import { IconArrow, IconHeart } from '../components/Icons'
@@ -46,15 +47,17 @@ export default function Support() {
           </div>
 
           <aside className="donate-card">
-            <img src="/images/patch.jpg" alt="" className="donate-card__patch" />
+            <img src="/images/shield.png" alt="" className="donate-card__patch" />
             <h3>Other ways to help</h3>
             <ul className="checklist">
               <li>
                 <a href="/volunteer">Volunteer your time</a> — our most valuable donation
               </li>
-              <li>
-                Buy a ticket for the <a href="#fundraiser">{fundraiser.name}</a>
-              </li>
+              {fundraiser.active && (
+                <li>
+                  Buy a ticket for the <Link to="/fundraiser">{fundraiser.name}</Link>
+                </li>
+              )}
               <li>
                 <a href={org.facebook} target="_blank" rel="noreferrer">
                   Follow and share us on Facebook
@@ -68,7 +71,7 @@ export default function Support() {
         </div>
       </section>
 
-      {/* ------------------------------------------------- Fundraiser */}
+      {/* Short teaser so /support#fundraiser still lands somewhere useful. */}
       {fundraiser.active && (
         <section className="section section--alt" id="fundraiser">
           <div className="wrap">
@@ -77,41 +80,9 @@ export default function Support() {
               <h2>{fundraiser.name}</h2>
               <p className="lead">{fundraiser.blurb}</p>
             </div>
-
-            <div className="raffle">
-              <figure className="raffle__poster media-figure">
-                <img
-                  src="/images/raffle.png"
-                  alt={`Promotional poster for ${fundraiser.name}.`}
-                  loading="lazy"
-                />
-              </figure>
-
-              <div className="raffle__body">
-                <p className="raffle__odds">
-                  <strong>Only {fundraiser.ticketCount} tickets</strong> are being sold.
-                </p>
-                <div className="grid grid--2 raffle__prizes">
-                  {fundraiser.prizes.map((p) => (
-                    <article key={p.title} className="prize">
-                      <img src={p.image} alt={p.alt} loading="lazy" />
-                      <div className="prize__body">
-                        <h3>{p.title}</h3>
-                        <p>{p.body}</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-                <a
-                  className="btn btn--primary"
-                  href={fundraiser.ctaUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {fundraiser.ctaLabel} <IconArrow />
-                </a>
-              </div>
-            </div>
+            <Link className="btn btn--primary" to="/fundraiser">
+              See the prizes <IconArrow />
+            </Link>
           </div>
         </section>
       )}

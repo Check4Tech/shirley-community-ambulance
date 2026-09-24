@@ -88,12 +88,9 @@ export default function Home() {
       {/* ------------------------------------------------- Primary actions */}
       <section className="section">
         <div className="wrap">
-          <div className="section__head section__head--center">
+          <div className="section__head section__head--center section__head--tight">
             <span className="eyebrow">How can we help?</span>
             <h2>Start here</h2>
-            <p className="lead">
-              The three things most people come to this site to do.
-            </p>
           </div>
           <div className="grid grid--3">
             {ACTIONS.map(({ icon: Icon, title, body, to, href, cta }) => {
@@ -128,6 +125,29 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ---------------------------------------------------- Fundraiser */}
+      {fundraiser.active && (
+        <section className="section fundraiser-strip">
+          <div className="wrap split split--center">
+            <div className="prose">
+              <span className="eyebrow">Happening now</span>
+              <h2>{fundraiser.name}</h2>
+              <p>{fundraiser.blurb}</p>
+              <Link className="btn btn--primary" to="/fundraiser">
+                See the prizes <IconArrow />
+              </Link>
+            </div>
+            <figure className="media-figure fundraiser-strip__figure">
+              <img
+                src={fundraiser.prizes[0].image}
+                alt={fundraiser.prizes[0].alt}
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </section>
+      )}
 
       {/* ------------------------------------------------------ Who we are */}
       <section className="section section--alt">
@@ -212,7 +232,7 @@ export default function Home() {
               </span>
               <h3>Student &amp; youth program</h3>
               <p>
-                High schoolers from 14 up ride with veteran providers, earn volunteer credit
+                High schoolers from 14+ ride with veteran providers, earn volunteer credit
                 for college applications, and get a free CPR card. The program costs families
                 nothing.
               </p>
@@ -223,29 +243,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ---------------------------------------------------- Fundraiser */}
-      {fundraiser.active && (
-        <section className="section fundraiser-strip">
-          <div className="wrap split split--center">
-            <div className="prose">
-              <span className="eyebrow">Happening now</span>
-              <h2>{fundraiser.name}</h2>
-              <p>{fundraiser.blurb}</p>
-              <Link className="btn btn--primary" to="/support#fundraiser">
-                See the prizes <IconArrow />
-              </Link>
-            </div>
-            <figure className="media-figure fundraiser-strip__figure">
-              <img
-                src={fundraiser.prizes[0].image}
-                alt={fundraiser.prizes[0].alt}
-                loading="lazy"
-              />
-            </figure>
-          </div>
-        </section>
-      )}
 
       {/* -------------------------------------------------------- Gallery */}
       <section className="section section--alt">

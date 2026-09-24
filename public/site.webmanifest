@@ -1,0 +1,13 @@
+{
+  "name": "Shirley Community Ambulance",
+  "short_name": "Shirley EMS",
+  "description": "Non-profit, all-volunteer EMS agency serving Shirley, New York since 1977.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0b2545",
+  "icons": [
+    { "src": "/images/shield-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/images/shield.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -1,6 +1,6 @@
-import { directors, org } from '../data/site'
+import { directors, formRecipients, org } from '../data/site'
 import { Field, Form, PageHero } from '../components/UI'
-import { IconFacebook, IconMail, IconPhone, IconPin } from '../components/Icons'
+import { IconFacebook, IconInstagram, IconMail, IconPhone, IconPin } from '../components/Icons'
 import './contact.css'
 
 export default function Contact() {
@@ -58,9 +58,12 @@ export default function Contact() {
               <IconFacebook />
             </span>
             <h3>Follow along</h3>
-            <p>
+            <p className="contact-card__socials">
               <a href={org.facebook} target="_blank" rel="noreferrer">
-                Shirley Community Ambulance on Facebook
+                <IconFacebook /> Facebook
+              </a>
+              <a href={org.instagram} target="_blank" rel="noreferrer">
+                <IconInstagram /> Instagram
               </a>
             </p>
             <p className="contact-card__note">
@@ -80,7 +83,12 @@ export default function Contact() {
               General questions, compliments about a crew, billing questions, or anything
               else. We read every one.
             </p>
-            <Form name="General contact" subject="Website contact form" submitLabel="Send message">
+            <Form
+              name="General contact"
+              subject="Website contact form"
+              to={formRecipients.generalContact.to}
+              submitLabel="Send message"
+            >
               <Field label="Name" name="name" required />
               <Field label="Email" name="email" type="email" required />
               <Field label="Phone number" name="phone" type="tel" />

@@ -20,7 +20,7 @@
   margin: 0;
   padding: 1rem 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-left: 4px solid var(--red-500);
+  border-left: 4px solid var(--accent-500);
   border-radius: var(--radius);
   background: rgba(255, 255, 255, 0.05);
   font-family: var(--font-display);
@@ -28,6 +28,97 @@
   font-weight: 600;
   color: #fff;
   line-height: 1.25;
+}
+
+/* ---------------------------------------------------------------------------
+   Board of directors
+
+   Narrow screens get a plain responsive grid with the shield above it. From
+   1000px up the five officers sit on a regular pentagon around the shield.
+   DOM order stays seniority (Chief, 1st, 2nd, Secretary, Treasurer); seats
+   are remapped so 1st is upper-left and 2nd is upper-right.
+--------------------------------------------------------------------------- */
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.board__ring {
+  display: none;
+}
+.board__shield {
+  grid-column: 1 / -1;
+  width: 120px;
+  height: auto;
+  margin: 0 auto 0.5rem;
+}
+
+@media (min-width: 1000px) {
+  .board {
+    display: block;
+    position: relative;
+    max-width: 1100px;
+    height: 780px;
+    margin-inline: auto;
+  }
+
+  /* Faint guide circle passing through the five card centres. */
+  .board__ring {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 72%;
+    height: 76%;
+    transform: translate(-50%, -50%);
+    border: 1px dashed rgba(17, 58, 107, 0.18);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .board__shield {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 210px;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 8px 20px rgba(11, 37, 69, 0.18));
+  }
+
+  .board__node {
+    position: absolute;
+    width: 250px;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Regular pentagon vertices, remapped from clockwise seniority.
+     Angles are from 12 o'clock: 0° top, 72° UR, 144° LR, 216° LL, 288° UL. */
+  .board__node--1 {
+    /* Chief of Operations — 0° top centre */
+    left: 50%;
+    top: 12%;
+  }
+  .board__node--2 {
+    /* 1st Assistant Chief — 288° upper left */
+    left: 15.8%;
+    top: 38.3%;
+  }
+  .board__node--3 {
+    /* 2nd Assistant Chief — 72° upper right */
+    left: 84.2%;
+    top: 38.3%;
+  }
+  .board__node--4 {
+    /* Secretary — 216° lower left */
+    left: 28.8%;
+    top: 80.7%;
+  }
+  .board__node--5 {
+    /* Treasurer — 144° lower right */
+    left: 71.2%;
+    top: 80.7%;
+  }
 }
 
 .about__two-col {

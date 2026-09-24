@@ -108,12 +108,12 @@
   line-height: 1.2;
 }
 .accordion__trigger:hover {
-  color: var(--red-600);
+  color: var(--accent-600);
 }
 .accordion__chevron {
   flex-shrink: 0;
   margin-top: 0.15rem;
-  color: var(--red-600);
+  color: var(--accent-600);
   transition: transform 0.2s ease;
 }
 .accordion__item.is-open .accordion__chevron {
@@ -236,7 +236,7 @@
   padding: 1.25rem 1.4rem;
   background: #fff;
   border: 1px solid var(--line);
-  border-left: 4px solid var(--red-600);
+  border-left: 4px solid var(--accent-600);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
 }
@@ -267,7 +267,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--red-600);
+  color: var(--accent-600);
 }
 .person__contact {
   list-style: none;
@@ -316,7 +316,7 @@
   margin-bottom: 0.4em;
 }
 .cta-band .eyebrow {
-  color: #ff8e9f;
+  color: var(--accent-200);
 }
 .cta-band__body {
   max-width: 54ch;
@@ -343,7 +343,7 @@
   font-size: 0.97rem;
 }
 .field__req {
-  color: var(--red-600);
+  color: var(--accent-600);
   margin-left: 0.2rem;
 }
 .field input,
@@ -385,7 +385,7 @@
   color: var(--ink-faint);
 }
 .form__required-note span {
-  color: var(--red-600);
+  color: var(--accent-600);
 }
 
 .form-status {
@@ -405,7 +405,7 @@
 }
 .form-status--err {
   margin-top: 1rem;
-  background: var(--red-050);
-  border: 1px solid var(--red-500);
-  color: var(--red-700);
+  background: var(--alert-050);
+  border: 1px solid var(--alert-500);
+  color: var(--alert-700);
 }

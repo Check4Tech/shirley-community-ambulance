@@ -2,7 +2,7 @@
    Emergency bar — the single most important thing on an EMS website
 --------------------------------------------------------------------------- */
 .emergency-bar {
-  background: var(--red-600);
+  background: var(--alert-600);
   color: #fff;
   font-size: 0.93rem;
 }
@@ -26,9 +26,19 @@
   text-decoration: none;
   white-space: nowrap;
 }
-.emergency-bar__phone:hover {
+/* No underline on hover (per the header treatment), so the affordance is a
+   lightened pill behind the link instead. */
+.emergency-bar__phone {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: transparent;
+  transition: background-color 0.15s ease;
+}
+.emergency-bar__phone:hover,
+.emergency-bar__phone:focus-visible {
   color: #fff;
-  text-decoration: underline;
+  background: rgba(255, 255, 255, 0.22);
+  text-decoration: none;
 }
 .emergency-bar__phone svg {
   width: 16px;
@@ -38,6 +48,46 @@
 /* ---------------------------------------------------------------------------
    Header
 --------------------------------------------------------------------------- */
+/* Nothing in the header uses a text-decoration underline. Each link keeps a
+   non-underline hover affordance instead (background tint, colour shift, or a
+   box-shadow bar) and :focus-visible still applies its outline. Body and
+   footer links are unaffected — underlines stay useful in running prose. */
+.site-header a,
+.site-header a:hover,
+.site-header a:focus,
+.site-header a:focus-visible,
+.site-header a:active,
+.nav-mobile a,
+.nav-mobile a:hover,
+.nav-mobile a:focus,
+.nav-mobile a:focus-visible,
+.nav-mobile a:active,
+.emergency-bar a,
+.emergency-bar a:hover,
+.emergency-bar a:focus {
+  text-decoration: none;
+}
+
+/* Nothing in the header uses a text-decoration underline. Each link keeps a
+   non-underline hover affordance instead (background tint, colour shift, or a
+   box-shadow bar) and :focus-visible still applies its outline. Body and
+   footer links are unaffected — underlines stay useful in running prose. */
+.site-header a,
+.site-header a:hover,
+.site-header a:focus,
+.site-header a:focus-visible,
+.site-header a:active,
+.nav-mobile a,
+.nav-mobile a:hover,
+.nav-mobile a:focus,
+.nav-mobile a:focus-visible,
+.nav-mobile a:active,
+.emergency-bar a,
+.emergency-bar a:hover,
+.emergency-bar a:focus {
+  text-decoration: none;
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -49,7 +99,7 @@
 .site-header__inner {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   min-height: var(--header-h);
 }
 
@@ -77,12 +127,14 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 .brand__sub {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-faint);
+  white-space: nowrap;
 }
 
 .nav-desktop {
@@ -91,24 +143,27 @@
 .nav-desktop ul {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  flex-wrap: nowrap;
+  gap: 0.15rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 .nav-desktop li {
   margin: 0;
+  flex-shrink: 0;
 }
 .nav-desktop a {
   display: block;
-  padding: 0.5rem 0.85rem;
+  padding: 0.5rem 0.65rem;
   border-radius: var(--radius);
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   text-decoration: none;
+  white-space: nowrap;
   color: var(--navy-800);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
@@ -117,15 +172,46 @@
   color: var(--navy-700);
 }
 .nav-desktop a.active {
-  color: var(--red-600);
-  box-shadow: inset 0 -3px 0 var(--red-600);
+  color: var(--accent-600);
+  box-shadow: inset 0 -3px 0 var(--accent-600);
   border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .site-header__actions {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  flex-shrink: 0;
+  gap: 0.65rem;
+}
+
+/* Secondary to Donate: a plain text link so it never competes with the
+   primary call to action. */
+.members-login {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  word-spacing: normal;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  color: var(--navy-700);
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
+}
+.members-login:hover,
+.members-login.active {
+  color: var(--accent-600);
+  border-bottom-color: var(--accent-600);
+  text-decoration: none;
+}
+
+@media (max-width: 1100px) {
+  /* Reappears in the mobile panel footer. */
+  .members-login {
+    display: none;
+  }
 }
 
 .nav-toggle {
@@ -174,7 +260,7 @@
   color: var(--navy-800);
 }
 .nav-mobile nav a.active {
-  color: var(--red-600);
+  color: var(--accent-600);
 }
 .nav-mobile__foot {
   display: grid;
@@ -243,17 +329,27 @@
   }
 }
 
+/* The emblem sits straight on the navy — no plate behind it. The shield's own
+   face is white by design; what must not appear is a white square around its
+   silhouette. */
 .site-footer__brand img {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   object-fit: contain;
-  background: #fff;
-  border-radius: 8px;
-  padding: 4px;
   margin-bottom: 1rem;
 }
 .site-footer__mission {
   max-width: 34ch;
+}
+.site-footer__follow {
+  margin: 0 0 0.45rem;
+  font-weight: 600;
+}
+.site-footer__socials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.25rem;
 }
 .site-footer__social {
   display: inline-flex;
@@ -267,8 +363,11 @@
   display: grid;
   gap: 0.75rem;
 }
+/* Icon, then a single block-level item carrying the address lines. Putting
+   each line directly in the flex row would turn them into side-by-side
+   columns, which is what the old <br /> markup was fighting. */
 .site-footer address a {
-  display: inline-flex;
+  display: flex;
   align-items: flex-start;
   gap: 0.5rem;
 }
@@ -276,9 +375,10 @@
   flex-shrink: 0;
   margin-top: 0.2rem;
 }
-.site-footer__indent {
-  padding-left: 1.7rem;
-  display: inline-block;
+.site-footer__lines {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 .site-footer__note {
   color: #8ba3bf;
@@ -310,7 +410,19 @@
 .site-footer__legal p {
   margin: 0;
 }
+.site-footer__legal-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+.site-footer__credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.site-footer__credit a:hover {
+  color: #cfdcec;
+}
 .site-footer__emergency {
   font-weight: 700;
-  color: #ff9aa9;
+  color: var(--accent-200);
 }

@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { org } from '../data/site'
-import { IconFacebook, IconMenu, IconPhone, IconPin, IconX } from './Icons'
+import { fundraiser, org } from '../data/site'
+import { IconFacebook, IconInstagram, IconMenu, IconPhone, IconPin, IconX } from './Icons'
 import './layout.css'
 
 const NAV = [
   { to: '/about', label: 'About' },
   { to: '/volunteer', label: 'Volunteer' },
   { to: '/services', label: 'Services' },
-  { to: '/support', label: 'Support Us' },
+  { to: '/support', label: 'Support' },
+  ...(fundraiser.active ? [{ to: '/fundraiser', label: 'Fundraiser' }] : []),
   { to: '/contact', label: 'Contact' },
 ]
 
@@ -52,7 +53,13 @@ function Header() {
     <header className="site-header">
       <div className="wrap site-header__inner">
         <Link to="/" className="brand" aria-label={`${org.name} — home`}>
-          <img src="/images/logo.jpg" alt="" width="52" height="52" className="brand__mark" />
+          <img
+            src="/images/shield.png"
+            alt=""
+            width="52"
+            height="52"
+            className="brand__mark"
+          />
           <span className="brand__text">
             <span className="brand__name">Shirley Community Ambulance</span>
             <span className="brand__sub">Volunteer EMS · Shirley, NY</span>
@@ -70,6 +77,12 @@ function Header() {
         </nav>
 
         <div className="site-header__actions">
+          <NavLink
+            className={({ isActive }) => `members-login${isActive ? ' active' : ''}`}
+            to={org.membersPath}
+          >
+            Members Login
+          </NavLink>
           <a
             className="btn btn--primary btn--sm"
             href={org.donateUrl}
@@ -118,6 +131,9 @@ function Header() {
           <a className="btn btn--outline btn--block" href={org.phoneHref}>
             Call {org.phone}
           </a>
+          <NavLink className="btn btn--outline btn--block" to={org.membersPath}>
+            Members Login
+          </NavLink>
         </div>
       </div>
     </header>
@@ -129,34 +145,53 @@ function Footer() {
     <footer className="site-footer">
       <div className="wrap site-footer__grid">
         <div className="site-footer__brand">
-          <img src="/images/logo.jpg" alt="" width="64" height="64" />
+          <img src="/images/shield.png" alt="" width="72" height="72" />
           <p className="site-footer__mission">
             A non-profit, all-volunteer ambulance agency serving the Shirley ambulance tax
             district since {org.foundedYear}.
           </p>
-          <a
-            className="site-footer__social"
-            href={org.facebook}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <IconFacebook /> Follow us on Facebook
-          </a>
+          <p className="site-footer__follow">Follow us</p>
+          <div className="site-footer__socials">
+            <a
+              className="site-footer__social"
+              href={org.facebook}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <IconFacebook /> Facebook
+            </a>
+            <a
+              className="site-footer__social"
+              href={org.instagram}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <IconInstagram /> Instagram
+            </a>
+          </div>
         </div>
 
         <div>
           <h4>Visit or write</h4>
           <address>
             <a href={org.mapsUrl} target="_blank" rel="noreferrer">
-              <IconPin /> {org.station.street}
-              <br />
-              <span className="site-footer__indent">
-                {org.station.city}, {org.station.state} {org.station.zip}
+              <IconPin />
+              {/* One block-level flex item holds both lines, so the street and
+                  the city/state/zip stack instead of becoming sibling
+                  columns of the row. */}
+              <span className="site-footer__lines">
+                <span>{org.station.street}</span>
+                <span>
+                  {org.station.city}, {org.station.state} {org.station.zip}
+                </span>
               </span>
             </a>
             <span className="site-footer__note">Mailing: {org.mailing.full}</span>
             <a href={org.phoneHref}>
-              <IconPhone /> {org.phone}
+              <IconPhone />
+              <span className="site-footer__lines">
+                <span>{org.phone}</span>
+              </span>
             </a>
           </address>
         </div>
@@ -179,38 +214,52 @@ function Footer() {
             <li>
               <Link to="/about#gallery">Photo gallery</Link>
             </li>
+            {fundraiser.active && (
+              <li>
+                <Link to="/fundraiser">Fundraiser</Link>
+              </li>
+            )}
           </ul>
         </div>
 
         <div>
           <h4>Request &amp; support</h4>
           <ul className="site-footer__links">
+            {/* Land on the form itself, not the section heading above it. */}
             <li>
-              <Link to="/services#cpr">Book a CPR class</Link>
+              <Link to="/services#cpr-form">Book a CPR class</Link>
             </li>
             <li>
-              <Link to="/services#standby">Request a stand-by</Link>
+              <Link to="/services#standby-form">Request a stand-by</Link>
             </li>
             <li>
               <Link to="/support">Donate</Link>
             </li>
+            {fundraiser.active && (
+              <li>
+                <Link to="/fundraiser">Fundraiser</Link>
+              </li>
+            )}
             <li>
-              <Link to="/support#fundraiser">Fundraisers</Link>
-            </li>
-            <li>
-              <a href={org.membersPortalUrl} target="_blank" rel="noreferrer">
-                Members only
-              </a>
+              <Link to={org.membersPath}>Members only</Link>
             </li>
           </ul>
         </div>
       </div>
 
       <div className="wrap site-footer__legal">
-        <p>
-          © {new Date().getFullYear()} {org.name}. All rights reserved. {org.name} is a
-          registered non-profit organization.
-        </p>
+        <div className="site-footer__legal-copy">
+          <p>
+            © {new Date().getFullYear()} {org.name}. All rights reserved. {org.name} is a
+            registered non-profit organization.
+          </p>
+          <p className="site-footer__credit">
+            Website designed and hosted by{' '}
+            <a href="https://check4tech.net/" target="_blank" rel="noreferrer">
+              Check4Tech Solutions
+            </a>, a Check4Tech Corp company.
+          </p>
+        </div>
         <p className="site-footer__emergency">Emergency? Call 911.</p>
       </div>
     </footer>

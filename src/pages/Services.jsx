@@ -1,11 +1,67 @@
-import { cprCourses, org, standbyUnits } from '../data/site'
+import { cprCourses, formRecipients, org, standbyUnits } from '../data/site'
 import { CtaBand, Field, Form, PageHero } from '../components/UI'
+import StructuredData from '../components/StructuredData'
 import { IconArrow } from '../components/Icons'
 import './services.css'
+
+const provider = {
+  '@type': 'EmergencyService',
+  name: org.name,
+  telephone: '+1-631-399-5380',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: org.station.street,
+    addressLocality: org.station.city,
+    addressRegion: org.station.state,
+    postalCode: org.station.zip,
+    addressCountry: 'US',
+  },
+}
+
+const servicesSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      name: 'Public CPR, AED and First Aid training',
+      serviceType: 'CPR and first aid certification courses',
+      provider,
+      areaServed: { '@type': 'Place', name: 'Suffolk County, New York' },
+      description:
+        'American Heart Association CPR/AED, General First Aid, and BLS for Healthcare Providers courses taught by Shirley Community Ambulance instructors. Classes require a minimum of three people and some carry a fee.',
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Courses offered',
+        itemListElement: cprCourses.map((c) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: c.title, description: c.body },
+        })),
+      },
+    },
+    {
+      '@type': 'Service',
+      name: 'Event medical stand-by coverage',
+      serviceType: 'Event EMS standby',
+      provider,
+      areaServed: { '@type': 'Place', name: 'Shirley ambulance tax district, New York' },
+      description:
+        'Ambulance, first responder, fire rehab, and bike team coverage for races, carnivals, sporting events, and large gatherings in the Shirley district.',
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Available units',
+        itemListElement: standbyUnits.map((u) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: u.title, description: u.body },
+        })),
+      },
+    },
+  ],
+}
 
 export default function Services() {
   return (
     <>
+      <StructuredData id="ld-services" data={servicesSchema} />
       <PageHero
         eyebrow="Community services"
         title="What we can do for you"
@@ -56,7 +112,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="cpr-form">
         <div className="wrap split">
           <div>
             <span className="eyebrow">Interest form</span>
@@ -65,7 +121,12 @@ export default function Services() {
               Tell us a little about your group and a member of our team will get back to you
               with dates and availability.
             </p>
-            <Form name="CPR course interest" subject="CPR course interest" submitLabel="Send request">
+            <Form
+              name="CPR course interest"
+              subject="CPR course interest"
+              to={formRecipients.cprCourse.to}
+              submitLabel="Send request"
+            >
               <Field label="Name" name="name" required />
               <Field label="Email" name="email" type="email" required />
               <Field label="Phone number" name="phone" type="tel" required />
@@ -140,7 +201,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="standby-form">
         <div className="wrap split">
           <div>
             <span className="eyebrow">Request form</span>
@@ -152,6 +213,8 @@ export default function Services() {
             <Form
               name="Stand-by request"
               subject="Event stand-by request"
+              to={formRecipients.standby.to}
+              cc={formRecipients.standby.cc}
               submitLabel="Send request"
             >
               <Field label="Name" name="name" required />
@@ -161,12 +224,6 @@ export default function Services() {
               <Field label="Date of event" name="eventDate" type="date" required />
               <Field label="Event start and end time" name="eventTime" required />
               <Field label="Event location" name="location" required />
-              <Field
-                label="Estimated attendance"
-                name="attendance"
-                type="number"
-                help="A rough number is fine — it helps us size the assignment."
-              />
               <Field
                 label="Units requested"
                 name="units"

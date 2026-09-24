@@ -13,3 +13,6 @@ createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </StrictMode>
 )
+
+// Drop the inline boot loader now that React has painted.
+document.getElementById('boot')?.remove()

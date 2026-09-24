@@ -1,4 +1,58 @@
+# Shirley Community Ambulance
+# Everything here is public information for the community we serve, so all
+# crawlers — search engines and AI assistants alike — are welcome.
+
 User-agent: *
+Allow: /
+
+# Named explicitly so AI answer engines are not left guessing. These agents
+# increasingly gate on an explicit Allow rather than a wildcard.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: DuckAssistBot
 Allow: /
 
 Sitemap: https://shirleycommunityambulance.org/sitemap.xml

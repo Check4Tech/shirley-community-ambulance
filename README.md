@@ -6,6 +6,8 @@ React single-page app, replacing the original GoDaddy Website Builder site.
 Shirley Community Ambulance is a non-profit, all-volunteer EMS agency serving the Shirley
 ambulance tax district in Shirley, New York.
 
+Website designed and hosted by [Check4Tech Solutions](https://check4tech.net/), a Check4Tech Corp company.
+
 ## Running it
 
 ```bash

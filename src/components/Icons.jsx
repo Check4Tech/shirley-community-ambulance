@@ -39,6 +39,14 @@ export const IconFacebook = (p) => (
   </svg>
 )
 
+export const IconInstagram = (p) => (
+  <svg {...base} {...p}>
+    <rect x="2" y="2" width="20" height="20" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <path d="M17.5 6.5h.01" />
+  </svg>
+)
+
 export const IconMenu = (p) => (
   <svg {...base} width="26" height="26" {...p}>
     <path d="M3 6h18M3 12h18M3 18h18" />

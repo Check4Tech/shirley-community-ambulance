@@ -35,9 +35,10 @@ export const org = {
   mapEmbedUrl:
     'https://www.google.com/maps?q=3+Plymouth+Place,+Shirley,+NY+11967&output=embed',
   facebook: 'https://www.facebook.com/1287290221391033',
+  instagram: 'https://www.instagram.com/shirleyambulance/',
   donateUrl:
     'https://www.zeffy.com/en-US/donation-form/04b76ba1-f8ce-4a3a-b2a9-378aadef47d7',
-  membersPortalUrl: 'https://shirleycommunityambulance.org/members-only',
+  membersPath: '/members',
 }
 
 export const stats = [
@@ -124,11 +125,10 @@ export const membershipCommittee = {
   members: [
     { name: 'Tracy Davis', cert: 'EMT-B' },
     { name: 'Kim Stavola', cert: 'EMT-B' },
-    { name: 'Humberto Diaz', cert: 'EMT-P' },
   ],
+  // Committee-level contact details, deliberately not attributed to an
+  // individual so the site doesn't need editing when the roster changes.
   contact: {
-    name: 'Humberto Diaz',
-    cert: 'EMT-P',
     ext: '114',
     email: 'members@shirleyems.org',
   },
@@ -146,6 +146,30 @@ export const studentAdvisors = [
   { name: 'Emily Marmol', cert: 'EMT-B' },
   { name: 'Arthur Reilly', cert: 'EMT-B' },
 ]
+
+/** Look an officer's address up by role so routing can't drift out of sync. */
+const emailFor = (role) => directors.find((d) => d.role === role)?.email
+
+/**
+ * Where each form goes. Kept here so the agency can re-route a form without
+ * touching component code.
+ *
+ * NOTE: when VITE_FORM_ENDPOINT is set, these are submitted as _to/_cc fields.
+ * Most providers (Formspree, Basin, …) will not deliver to an arbitrary
+ * address supplied by the client — the real recipient must also be configured
+ * in the provider's dashboard. The fields are there so the intended routing is
+ * recorded on the submission either way.
+ */
+export const formRecipients = {
+  cprCourse: { to: emailFor('Secretary') },
+  standby: {
+    to: emailFor('2nd Assistant Chief'),
+    cc: [emailFor('Chief of Operations'), emailFor('1st Assistant Chief')],
+  },
+  adultMembership: { to: membershipCommittee.contact.email },
+  studentProgram: { to: membershipCommittee.contact.email },
+  generalContact: { to: emailFor('Secretary') },
+}
 
 export const adultBenefits = [
   'Training and education in First Aid, CPR, EMT, Paramedic, and many related topics',

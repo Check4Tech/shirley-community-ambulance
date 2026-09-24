@@ -1,14 +1,28 @@
 import {
   adultBenefits,
   adultRequirements,
+  formRecipients,
   membershipCommittee,
   org,
   studentAdvisors,
   studentFaqs,
 } from '../data/site'
-import { Accordion, Field, Form, PageHero, PersonCard } from '../components/UI'
+import { Accordion, Field, Form, PageHero } from '../components/UI'
+import StructuredData from '../components/StructuredData'
 import { IconArrow } from '../components/Icons'
 import './volunteer.css'
+
+// The student-program Q&A is the most "askable" content on the site, so it is
+// published as FAQPage markup for search results and AI answer engines.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: studentFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
 
 // Both membership tracks used to be separate top-level tabs. They answer the
 // same question ("how do I join?"), so they live on one page with a jump menu.
@@ -28,6 +42,7 @@ const TRACKS = [
 export default function Volunteer() {
   return (
     <>
+      <StructuredData id="ld-faq" data={faqSchema} />
       <PageHero
         eyebrow="Become a member"
         title="Join our family"
@@ -83,16 +98,19 @@ export default function Volunteer() {
                 ))}
               </ul>
               <div className="panel__foot">
-                <p>
-                  Questions before you apply? Talk to{' '}
-                  {membershipCommittee.contact.name} on the membership committee.
-                </p>
-                <PersonCard
-                  name={membershipCommittee.contact.name}
-                  cert={membershipCommittee.contact.cert}
-                  ext={membershipCommittee.contact.ext}
-                  email={membershipCommittee.contact.email}
-                />
+                <p>Questions before you apply? Talk to our membership committee.</p>
+                <ul className="contact-lines">
+                  <li>
+                    <a href={`${org.phoneHref},${membershipCommittee.contact.ext}`}>
+                      {org.phone} <span className="contact-lines__ext">ext. {membershipCommittee.contact.ext}</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href={`mailto:${membershipCommittee.contact.email}`}>
+                      {membershipCommittee.contact.email}
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -111,6 +129,7 @@ export default function Volunteer() {
             <Form
               name="Adult membership inquiry"
               subject="Adult membership inquiry"
+              to={formRecipients.adultMembership.to}
               submitLabel="Submit application"
             >
               <Field label="First and last name" name="name" required />
@@ -209,6 +228,7 @@ export default function Volunteer() {
             <Form
               name="Student program application"
               subject="Student/youth program application"
+              to={formRecipients.studentProgram.to}
               submitLabel="Submit application"
             >
               <Field label="Student's name" name="studentName" required />

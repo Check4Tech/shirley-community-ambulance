@@ -288,25 +288,32 @@ export function Field({ label, name, type = 'text', required = false, options, r
   )
 }
 
-export function Form({ name, subject, submitLabel = 'Send', children, note }) {
+export function Form({ name, subject, to, cc = [], submitLabel = 'Send', children, note }) {
   const [state, setState] = useState('idle') // idle | sending | sent | error
+  const ccList = (cc || []).filter(Boolean)
 
   async function handleSubmit(e) {
     e.preventDefault()
     const data = new FormData(e.currentTarget)
     data.append('_form', name)
     data.append('_subject', subject || name)
+    // Recorded on the submission so the provider can route on it (and so the
+    // intended recipients are visible even if it cannot).
+    if (to) data.append('_to', to)
+    if (ccList.length) data.append('_cc', ccList.join(','))
 
     // No endpoint configured: hand off to the visitor's mail client so the
-    // message still reaches the agency.
+    // message still reaches the agency rather than vanishing.
     if (!FORM_ENDPOINT) {
       const body = [...data.entries()]
         .filter(([k]) => !k.startsWith('_'))
         .map(([k, v]) => `${k}: ${v}`)
         .join('\n')
-      window.location.href = `mailto:members@shirleyems.org?subject=${encodeURIComponent(
-        subject || name
-      )}&body=${encodeURIComponent(body)}`
+      const params = new URLSearchParams()
+      if (ccList.length) params.set('cc', ccList.join(','))
+      params.set('subject', subject || name)
+      params.set('body', body)
+      window.location.href = `mailto:${encodeURIComponent(to || '')}?${params.toString()}`
       setState('sent')
       return
     }

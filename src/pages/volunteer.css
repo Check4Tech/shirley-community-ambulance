@@ -51,7 +51,7 @@
   grid-column: 2;
   display: grid;
   place-items: center;
-  color: var(--red-600);
+  color: var(--accent-600);
 }
 .track-picker__item:hover .track-picker__arrow {
   color: #fff;
@@ -70,7 +70,7 @@
   box-shadow: var(--shadow-sm);
 }
 .panel--accent {
-  border-top: 5px solid var(--red-600);
+  border-top: 5px solid var(--accent-600);
 }
 .panel__sub {
   margin-top: -0.5rem;
@@ -78,7 +78,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--red-600);
+  color: var(--accent-600);
 }
 .panel__foot {
   margin-top: 1.75rem;

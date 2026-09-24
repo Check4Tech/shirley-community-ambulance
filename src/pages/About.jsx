@@ -92,9 +92,15 @@ export default function About() {
               <a href={org.phoneHref}>{org.phone}</a> using their extension.
             </p>
           </div>
-          <div className="grid grid--3">
-            {directors.map((d) => (
-              <PersonCard key={d.email} {...d} />
+          {/* DOM order is seniority order; the pentagon placement is purely
+              visual, applied with CSS at >=1000px only. */}
+          <div className="board">
+            <span className="board__ring" aria-hidden="true" />
+            <img className="board__shield" src="/images/shield.png" alt="" aria-hidden="true" />
+            {directors.map((d, i) => (
+              <div key={d.email} className={`board__node board__node--${i + 1}`}>
+                <PersonCard {...d} />
+              </div>
             ))}
           </div>
         </div>
@@ -115,13 +121,24 @@ export default function About() {
                 </li>
               ))}
             </ul>
-            <PersonCard
-              name={membershipCommittee.contact.name}
-              cert={membershipCommittee.contact.cert}
-              role="Membership contact"
-              ext={membershipCommittee.contact.ext}
-              email={membershipCommittee.contact.email}
-            />
+            <div className="committee-contact">
+              <p className="committee-contact__label">Contact the committee</p>
+              <ul className="contact-lines">
+                <li>
+                  <a href={`${org.phoneHref},${membershipCommittee.contact.ext}`}>
+                    {org.phone}{' '}
+                    <span className="contact-lines__ext">
+                      ext. {membershipCommittee.contact.ext}
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${membershipCommittee.contact.email}`}>
+                    {membershipCommittee.contact.email}
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
           <div>
             <h3>Medical Directors</h3>

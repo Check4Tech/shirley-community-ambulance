@@ -1,22 +1,21 @@
-import { useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Layout from './components/Layout'
+import Loader from './components/Loader'
 import Home from './pages/Home'
-import About from './pages/About'
-import Volunteer from './pages/Volunteer'
-import Services from './pages/Services'
-import Support from './pages/Support'
-import Contact from './pages/Contact'
-import NotFound from './pages/NotFound'
+import { applySeo } from './seo'
 
-const TITLES = {
-  '/': 'Shirley Community Ambulance | Volunteer EMS in Shirley, NY',
-  '/about': 'About Us | Shirley Community Ambulance',
-  '/volunteer': 'Become a Member | Shirley Community Ambulance',
-  '/services': 'CPR Classes & Stand-By Requests | Shirley Community Ambulance',
-  '/support': 'Donate & Fundraisers | Shirley Community Ambulance',
-  '/contact': 'Contact Us | Shirley Community Ambulance',
-}
+// The landing page is bundled eagerly because it is the most common entry
+// point; the rest are split so each route is a small separate download. The
+// gap while a chunk loads is what the flipping-shield loader fills.
+const About = lazy(() => import('./pages/About'))
+const Volunteer = lazy(() => import('./pages/Volunteer'))
+const Services = lazy(() => import('./pages/Services'))
+const Support = lazy(() => import('./pages/Support'))
+const Fundraiser = lazy(() => import('./pages/Fundraiser'))
+const Contact = lazy(() => import('./pages/Contact'))
+const Members = lazy(() => import('./pages/Members'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 // Old GoDaddy paths -> their new location. The student program page used to
 // live at a path containing an encoded slash, so both spellings are covered.
@@ -29,8 +28,9 @@ const LEGACY_URLS = {
   '/student%2Fyouth-program': '/volunteer#student',
   '/public-training-courses': '/services#cpr',
   '/stand-by-requests': '/services#standby',
-  '/fundraisers': '/support#fundraiser',
+  '/fundraisers': '/fundraiser',
   '/contact-us': '/contact',
+  '/members-only': '/members',
 }
 
 // Route changes should land at the top of the new page, except when the URL
@@ -39,7 +39,7 @@ function RouteEffects() {
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    document.title = TITLES[pathname] || 'Shirley Community Ambulance'
+    applySeo(pathname)
   }, [pathname])
 
   useEffect(() => {
@@ -47,14 +47,21 @@ function RouteEffects() {
       window.scrollTo(0, 0)
       return
     }
-    // The target section belongs to the page we are navigating to, so wait a
-    // frame for it to mount before scrolling.
-    const id = requestAnimationFrame(() => {
+    // The target section belongs to the page we are navigating to, and that
+    // page may still be loading its chunk, so poll briefly for the anchor.
+    let frames = 0
+    let raf = 0
+    const tryScroll = () => {
       const el = document.querySelector(hash)
-      if (el) el.scrollIntoView({ behavior: 'smooth' })
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+        return
+      }
+      if (frames++ < 60) raf = requestAnimationFrame(tryScroll)
       else window.scrollTo(0, 0)
-    })
-    return () => cancelAnimationFrame(id)
+    }
+    raf = requestAnimationFrame(tryScroll)
+    return () => cancelAnimationFrame(raf)
   }, [pathname, hash])
 
   return null
@@ -64,20 +71,24 @@ export default function App() {
   return (
     <Layout>
       <RouteEffects />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/volunteer" element={<Volunteer />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/support" element={<Support />} />
-        <Route path="/contact" element={<Contact />} />
-        {/* The old GoDaddy URLs redirect to their new home so that existing
-            links, bookmarks, and search results keep working. */}
-        {Object.entries(LEGACY_URLS).map(([from, to]) => (
-          <Route key={from} path={from} element={<Navigate to={to} replace />} />
-        ))}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<Loader label="Loading…" />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/volunteer" element={<Volunteer />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/fundraiser" element={<Fundraiser />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/members" element={<Members />} />
+          {/* The old GoDaddy URLs redirect to their new home so that existing
+              links, bookmarks, and search results keep working. */}
+          {Object.entries(LEGACY_URLS).map(([from, to]) => (
+            <Route key={from} path={from} element={<Navigate to={to} replace />} />
+          ))}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </Layout>
   )
 }

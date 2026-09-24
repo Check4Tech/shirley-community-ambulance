@@ -3,58 +3,178 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/jpeg" href="/images/logo.jpg" />
-    <link rel="apple-touch-icon" href="/images/logo.jpg" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/shield-192.png" />
+    <link rel="apple-touch-icon" href="/images/shield-apple-touch.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#0b2545" />
+
     <title>Shirley Community Ambulance | Volunteer EMS in Shirley, NY</title>
     <meta
       name="description"
-      content="Shirley Community Ambulance is a non-profit, all-volunteer EMS agency serving the Shirley ambulance tax district in Shirley, New York since 1977. Volunteer, donate, request a stand-by, or book a CPR class."
+      content="Shirley Community Ambulance is a non-profit, all-volunteer EMS agency serving the Shirley ambulance tax district in Shirley, New York since 1977. We answer over 1,500 emergency calls a year with Advanced and Basic Life Support, 24 hours a day. Call 911 for emergencies or (631) 399-5380 for business."
     />
-    <meta property="og:title" content="Shirley Community Ambulance" />
+    <link rel="canonical" href="https://shirleycommunityambulance.org/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Shirley Community Ambulance" />
+    <meta property="og:title" content="Shirley Community Ambulance | Volunteer EMS in Shirley, NY" />
     <meta
       property="og:description"
-      content="All-volunteer ALS and BLS ambulance service for Shirley, NY. On call 24 hours a day, 365 days a year since 1977."
+      content="All-volunteer ALS and BLS ambulance service for Shirley, New York. On call 24 hours a day, 365 days a year since 1977."
     />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/images/hero-crew.jpg" />
+    <meta property="og:url" content="https://shirleycommunityambulance.org/" />
+    <meta property="og:image" content="https://shirleycommunityambulance.org/images/hero-crew.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
+
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "EmergencyService",
-        "name": "Shirley Community Ambulance",
-        "description": "Non-profit, all-volunteer ambulance agency serving the Shirley ambulance tax district in Shirley, New York since 1977.",
-        "url": "https://shirleycommunityambulance.org/",
-        "logo": "https://shirleycommunityambulance.org/images/logo.jpg",
-        "telephone": "+1-631-399-5380",
-        "foundingDate": "1977",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "3 Plymouth Place",
-          "addressLocality": "Shirley",
-          "addressRegion": "NY",
-          "postalCode": "11967",
-          "addressCountry": "US"
-        },
-        "areaServed": { "@type": "Place", "name": "Shirley ambulance tax district, Suffolk County, NY" },
-        "openingHoursSpecification": {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-          "opens": "00:00",
-          "closes": "23:59"
-        },
-        "sameAs": ["https://www.facebook.com/1287290221391033"]
+        "@graph": [
+          {
+            "@type": ["EmergencyService", "NGO"],
+            "@id": "https://shirleycommunityambulance.org/#organization",
+            "name": "Shirley Community Ambulance",
+            "alternateName": ["Shirley Community Ambulance Co.", "Shirley EMS"],
+            "description": "Shirley Community Ambulance is a non-profit, all-volunteer emergency medical services agency serving the Shirley ambulance tax district in Shirley, New York. Founded in 1977, it answers more than 1,500 emergency calls a year with three ambulances and two first-response vehicles, providing both Basic Life Support and Advanced Life Support 24 hours a day, 365 days a year.",
+            "url": "https://shirleycommunityambulance.org/",
+            "logo": "https://shirleycommunityambulance.org/images/shield.png",
+            "image": "https://shirleycommunityambulance.org/images/hero-crew.jpg",
+            "telephone": "+1-631-399-5380",
+            "email": "members@shirleyems.org",
+            "foundingDate": "1977",
+            "nonprofitStatus": "Nonprofit501c3",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "3 Plymouth Place",
+              "addressLocality": "Shirley",
+              "addressRegion": "NY",
+              "postalCode": "11967",
+              "addressCountry": "US"
+            },
+            "geo": { "@type": "GeoCoordinates", "latitude": 40.7998, "longitude": -72.8712 },
+            "areaServed": {
+              "@type": "Place",
+              "name": "Shirley ambulance tax district, Suffolk County, New York"
+            },
+            "openingHoursSpecification": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
+              "opens": "00:00",
+              "closes": "23:59"
+            },
+            "availableService": [
+              { "@type": "Service", "name": "Advanced Life Support ambulance transport" },
+              { "@type": "Service", "name": "Basic Life Support ambulance transport" },
+              { "@type": "Service", "name": "Emergency first response" },
+              { "@type": "Service", "name": "Mutual aid to neighbouring EMS districts" },
+              { "@type": "Service", "name": "Public CPR, AED and First Aid training" },
+              { "@type": "Service", "name": "Event medical stand-by coverage" }
+            ],
+            "knowsAbout": [
+              "emergency medical services",
+              "volunteer ambulance",
+              "EMT training",
+              "CPR certification",
+              "event medical standby"
+            ],
+            "sameAs": [
+              "https://www.facebook.com/1287290221391033",
+              "https://www.instagram.com/shirleyambulance/"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://shirleycommunityambulance.org/#website",
+            "url": "https://shirleycommunityambulance.org/",
+            "name": "Shirley Community Ambulance",
+            "publisher": { "@id": "https://shirleycommunityambulance.org/#organization" },
+            "inLanguage": "en-US"
+          }
+        ]
       }
     </script>
+
+    <style>
+      /* Shown between first paint and React mounting, then removed. Inlined so
+         it needs no network round-trip of its own. */
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 1.25rem;
+        background: #fff;
+        z-index: 9999;
+      }
+      #boot img {
+        width: 104px;
+        height: 104px;
+        animation: boot-flip 2.4s cubic-bezier(0.45, 0.05, 0.3, 1) infinite;
+      }
+      #boot p {
+        margin: 0;
+        font: 600 1.05rem/1 system-ui, sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #113a6b;
+      }
+      @keyframes boot-flip {
+        0%,
+        12% {
+          transform: rotateY(0deg);
+        }
+        50%,
+        62% {
+          transform: rotateY(180deg);
+        }
+        100% {
+          transform: rotateY(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot img {
+          animation: none;
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="boot">
+      <img src="/images/shield.png" alt="" width="104" height="104" />
+      <p>Loading</p>
+    </div>
     <div id="root"></div>
+    <noscript>
+      <div style="padding: 2rem; font-family: system-ui, sans-serif">
+        <h1>Shirley Community Ambulance</h1>
+        <p>
+          A non-profit, all-volunteer EMS agency serving Shirley, New York since 1977.
+          <strong>In an emergency, call 911.</strong> For non-emergency business, call
+          <a href="tel:+16313995380">(631) 399-5380</a> or visit 3 Plymouth Place, Shirley, NY
+          11967.
+        </p>
+        <p>This site needs JavaScript enabled to browse. Please call us instead.</p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

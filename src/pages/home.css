@@ -44,7 +44,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #ff8e9f;
+  color: var(--accent-200);
   margin-bottom: 0.9rem;
 }
 .hero__title {
@@ -96,24 +96,34 @@
 /* ---------------------------------------------------------------------------
    Fundraiser strip
 --------------------------------------------------------------------------- */
+/* Deep blue gradient rather than a mid azure one: the light body copy and the
+   eyebrow both need to clear AA against every stop of the ramp. */
 .fundraiser-strip {
-  background: linear-gradient(135deg, var(--red-700), var(--red-600));
-  color: #ffe3e7;
+  background: linear-gradient(135deg, var(--navy-800), var(--accent-700));
+  color: #d7e8fb;
 }
 .fundraiser-strip h2,
 .fundraiser-strip h3 {
   color: #fff;
 }
 .fundraiser-strip .eyebrow {
-  color: #ffd2d9;
+  color: #d7e8fb;
 }
+/* Inverted at rest so it reads against the blue band. The shared .btn:hover
+   uses --accent-700, which is also this band's gradient stop — so a generic
+   hover would make the pill vanish into the background. Invert harder here:
+   navy fill, white border, white text, plus a white ring. */
 .fundraiser-strip .btn--primary {
   background: #fff;
-  color: var(--red-700);
+  color: var(--navy-800);
+  border-color: #fff;
 }
-.fundraiser-strip .btn--primary:hover {
+.fundraiser-strip .btn--primary:hover,
+.fundraiser-strip .btn--primary:focus-visible {
   background: var(--navy-900);
+  border-color: #fff;
   color: #fff;
+  box-shadow: 0 0 0 3px #fff;
 }
 .fundraiser-strip__figure img {
   aspect-ratio: 16 / 10;
@@ -135,7 +145,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--red-600);
+  color: var(--accent-600);
 }
 .home__gallery-more a:hover {
   text-decoration: underline;

@@ -1,0 +1,23 @@
+Rebuild Shirley Community Ambulance site in React
+
+Replaces the GoDaddy Website Builder site with a Vite + React SPA.
+
+Navigation goes from 13 entries to 5 by merging pages around visitor intent:
+About (about/directors/photos), Volunteer (adult + student programs),
+Services (CPR classes + stand-by requests), Support Us (donate + fundraisers),
+and Contact. Members Only was a bare login wall, so it moved to the footer.
+All former URLs redirect to their new location.
+
+The old home page held only a donate banner and a heading repeated six times.
+It now leads with who the agency is and the three actions people come for,
+followed by capabilities, community programs, the fundraiser, and photos.
+
+Also fixes: the "Signed in as: filler@godaddy.com" string that leaked into
+every page, the absent "call 911" notice, a hardcoded copyright year, and
+several typos in the body copy. Adds page titles, meta/OG tags, JSON-LD,
+sitemap, robots.txt, keyboard-accessible accordion and lightbox, skip link,
+and alt text throughout.
+
+Content lives in src/data/site.js so it can be edited without touching
+components. scripts/qa.mjs drives headless Chromium over every page to check
+for console errors, broken images, and layout overflow.
