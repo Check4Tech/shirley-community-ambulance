@@ -1,0 +1,316 @@
+/* ---------------------------------------------------------------------------
+   Emergency bar — the single most important thing on an EMS website
+--------------------------------------------------------------------------- */
+.emergency-bar {
+  background: var(--red-600);
+  color: #fff;
+  font-size: 0.93rem;
+}
+.emergency-bar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  padding: 0.45rem 0;
+}
+.emergency-bar__text {
+  margin: 0;
+}
+.emergency-bar__phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.emergency-bar__phone:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+.emergency-bar__phone svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------------------------------------------------------------------------
+   Header
+--------------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-height: var(--header-h);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: var(--navy-800);
+  flex-shrink: 0;
+}
+.brand__mark {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.brand__name {
+  font-family: var(--font-display);
+  font-size: 1.32rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.brand__sub {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.nav-desktop {
+  margin-left: auto;
+}
+.nav-desktop ul {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-desktop li {
+  margin: 0;
+}
+.nav-desktop a {
+  display: block;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--navy-800);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.nav-desktop a:hover {
+  background: var(--navy-050);
+  color: var(--navy-700);
+}
+.nav-desktop a.active {
+  color: var(--red-600);
+  box-shadow: inset 0 -3px 0 var(--red-600);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--navy-800);
+  cursor: pointer;
+}
+.nav-toggle:hover {
+  background: var(--navy-050);
+}
+
+/* Mobile panel */
+.nav-mobile {
+  display: none;
+  border-top: 1px solid var(--line);
+  background: #fff;
+  padding: 1rem 0 1.5rem;
+  max-height: calc(100dvh - var(--header-h));
+  overflow-y: auto;
+}
+.nav-mobile nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 1.25rem;
+}
+.nav-mobile nav li {
+  margin: 0;
+  border-bottom: 1px solid var(--line);
+}
+/* Scoped to `nav` so it cannot override the .btn styles in the panel footer. */
+.nav-mobile nav a {
+  display: block;
+  padding: 0.9rem 0.25rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--navy-800);
+}
+.nav-mobile nav a.active {
+  color: var(--red-600);
+}
+.nav-mobile__foot {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.25rem 1.25rem 0;
+}
+
+@media (max-width: 960px) {
+  .nav-desktop {
+    display: none;
+  }
+  .nav-toggle {
+    display: inline-flex;
+  }
+  .nav-mobile.is-open {
+    display: block;
+  }
+  .brand__sub {
+    display: none;
+  }
+  .brand__name {
+    font-size: 1.15rem;
+    max-width: 11ch;
+  }
+}
+
+@media (max-width: 420px) {
+  .emergency-bar__phone {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Footer
+--------------------------------------------------------------------------- */
+.site-footer {
+  background: var(--navy-900);
+  color: #b9cbe0;
+  padding: clamp(3rem, 6vw, 4.5rem) 0 1.5rem;
+  font-size: 0.97rem;
+}
+.site-footer h4 {
+  color: #fff;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.site-footer a {
+  color: #cfdcec;
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+}
+@media (max-width: 880px) {
+  .site-footer__grid {
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  }
+}
+
+.site-footer__brand img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 1rem;
+}
+.site-footer__mission {
+  max-width: 34ch;
+}
+.site-footer__social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.site-footer address {
+  font-style: normal;
+  display: grid;
+  gap: 0.75rem;
+}
+.site-footer address a {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.site-footer address svg {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+.site-footer__indent {
+  padding-left: 1.7rem;
+  display: inline-block;
+}
+.site-footer__note {
+  color: #8ba3bf;
+  font-size: 0.9rem;
+}
+
+.site-footer__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.site-footer__links li {
+  margin: 0;
+}
+
+.site-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.87rem;
+  color: #8ba3bf;
+}
+.site-footer__legal p {
+  margin: 0;
+}
+.site-footer__emergency {
+  font-weight: 700;
+  color: #ff9aa9;
+}

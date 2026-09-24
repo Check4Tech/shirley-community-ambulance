@@ -1,0 +1,420 @@
+/* ---------------------------------------------------------------------------
+   Design tokens
+   Palette is taken from the agency's shoulder patch: navy, red, white.
+--------------------------------------------------------------------------- */
+:root {
+  --navy-900: #071a33;
+  --navy-800: #0b2545;
+  --navy-700: #113a6b;
+  --navy-600: #17529c;
+  --navy-500: #2a6fc4;
+  --navy-050: #eaf1fa;
+
+  --red-700: #9c0c23;
+  --red-600: #c8102e;
+  --red-500: #e0243f;
+  --red-050: #fdeef0;
+
+  --ink: #14202e;
+  --ink-soft: #4a5b70;
+  --ink-faint: #6b7c91;
+  --line: #d9e1ea;
+  --surface: #ffffff;
+  --surface-alt: #f3f6fa;
+
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --wrap: 1160px;
+  --radius: 10px;
+  --radius-lg: 16px;
+
+  --shadow-sm: 0 1px 2px rgba(11, 37, 69, 0.08), 0 2px 8px rgba(11, 37, 69, 0.06);
+  --shadow-md: 0 4px 12px rgba(11, 37, 69, 0.1), 0 12px 32px rgba(11, 37, 69, 0.09);
+
+  --header-h: 76px;
+}
+
+/* ---------------------------------------------------------------------------
+   Reset
+--------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* keep anchored sections clear of the sticky header */
+  scroll-padding-top: calc(var(--header-h) + 24px);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  text-transform: uppercase;
+}
+h2 {
+  font-size: clamp(1.9rem, 4vw, 2.7rem);
+  text-transform: uppercase;
+  color: var(--navy-800);
+}
+h3 {
+  font-size: clamp(1.3rem, 2.2vw, 1.55rem);
+  color: var(--navy-800);
+}
+h4 {
+  font-size: 1.1rem;
+  color: var(--navy-800);
+}
+
+p {
+  margin: 0 0 1rem;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--navy-600);
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--red-600);
+}
+
+ul,
+ol {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+}
+li {
+  margin-bottom: 0.35rem;
+}
+
+:focus-visible {
+  outline: 3px solid var(--red-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Layout primitives
+--------------------------------------------------------------------------- */
+.wrap {
+  width: min(100% - 2.5rem, var(--wrap));
+  margin-inline: auto;
+}
+
+.section {
+  padding: clamp(3.5rem, 7vw, 6rem) 0;
+}
+.section--tight {
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
+}
+.section--alt {
+  background: var(--surface-alt);
+}
+.section--navy {
+  background: var(--navy-800);
+  color: #dce6f2;
+}
+.section--navy h2,
+.section--navy h3 {
+  color: #fff;
+}
+
+.section__head {
+  max-width: 62ch;
+  margin-bottom: 2.5rem;
+}
+.section__head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red-600);
+  margin-bottom: 0.5rem;
+}
+.section--navy .eyebrow {
+  color: #ff8e9f;
+}
+
+.lead {
+  font-size: 1.2rem;
+  color: var(--ink-soft);
+}
+.section--navy .lead {
+  color: #b9cbe0;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+.grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.grid--4 {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+/* Hidden until focused, without pushing the document bounds sideways. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  transform: translateY(-120%);
+  background: var(--red-600);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------------------
+   Buttons
+--------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.75rem 1.6rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    transform 0.15s ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--primary {
+  background: var(--red-600);
+  color: #fff;
+}
+.btn--primary:hover {
+  background: var(--red-700);
+  color: #fff;
+}
+
+.btn--navy {
+  background: var(--navy-700);
+  color: #fff;
+}
+.btn--navy:hover {
+  background: var(--navy-800);
+  color: #fff;
+}
+
+.btn--outline {
+  background: transparent;
+  border-color: var(--navy-700);
+  color: var(--navy-700);
+}
+.btn--outline:hover {
+  background: var(--navy-700);
+  color: #fff;
+}
+
+.btn--ghost-light {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+.btn--ghost-light:hover {
+  background: #fff;
+  color: var(--navy-800);
+}
+
+.btn--sm {
+  font-size: 1rem;
+  padding: 0.5rem 1.1rem;
+}
+.btn--block {
+  width: 100%;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Cards
+--------------------------------------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem;
+  box-shadow: var(--shadow-sm);
+}
+.card > :last-child {
+  margin-bottom: 0;
+}
+.card__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--navy-050);
+  color: var(--navy-700);
+  margin-bottom: 1rem;
+}
+
+/* Cards that are entirely a link target */
+.card--link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.card--link:hover {
+  border-color: var(--navy-500);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  color: inherit;
+}
+.card--link .card__more {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--red-600);
+}
+
+/* ---------------------------------------------------------------------------
+   Misc shared pieces
+--------------------------------------------------------------------------- */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.checklist li {
+  position: relative;
+  padding-left: 1.9rem;
+  margin: 0;
+}
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.7rem;
+  height: 0.38rem;
+  border-left: 2.5px solid var(--red-600);
+  border-bottom: 2.5px solid var(--red-600);
+  transform: rotate(-45deg);
+}
+
+.prose {
+  max-width: 68ch;
+}
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.media-figure {
+  margin: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.media-figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Two-column text/media layout. Defaults to top-aligned so that unequal
+   columns (a long form next to a short aside) don't leave a gap above the
+   shorter one. Use .split--center for image-beside-paragraph sections. */
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: start;
+}
+.split--center {
+  align-items: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
