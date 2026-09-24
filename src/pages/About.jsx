@@ -39,7 +39,7 @@ export default function About() {
               alt="Three Shirley Community Ambulance rigs parked under the station apparatus bay canopy."
               loading="lazy"
             />
-            <figcaption>Our fleet at quarters on Plymouth Place.</figcaption>
+            <figcaption>NYU Langone - Suffolk</figcaption>
           </figure>
         </div>
       </section>

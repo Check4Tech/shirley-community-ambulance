@@ -288,12 +288,79 @@ export function Field({ label, name, type = 'text', required = false, options, r
   )
 }
 
-export function Form({ name, subject, to, cc = [], submitLabel = 'Send', children, note }) {
-  const [state, setState] = useState('idle') // idle | sending | sent | error
+/** Multiple file picker that lists the chosen filenames under the input. */
+export function FileField({
+  label,
+  name,
+  required = false,
+  accept = 'application/pdf',
+  multiple = false,
+  help,
+}) {
+  const id = `f-${name}`
+  const [files, setFiles] = useState([])
+
+  return (
+    <p className="field">
+      <label htmlFor={id}>
+        {label}
+        {required && (
+          <span className="field__req" aria-hidden="true">
+            *
+          </span>
+        )}
+      </label>
+      <input
+        id={id}
+        name={name}
+        type="file"
+        required={required}
+        accept={accept}
+        multiple={multiple}
+        aria-describedby={help ? `${id}-help` : undefined}
+        onChange={(e) => setFiles([...e.target.files])}
+      />
+      {files.length > 0 && (
+        <ul className="field__files">
+          {files.map((f) => (
+            <li key={`${f.name}-${f.size}`}>{f.name}</li>
+          ))}
+        </ul>
+      )}
+      {help && (
+        <span className="field__help" id={`${id}-help`}>
+          {help}
+        </span>
+      )}
+    </p>
+  )
+}
+
+export function Form({
+  name,
+  subject,
+  to,
+  cc = [],
+  submitLabel = 'Send',
+  children,
+  note,
+  offlineMessage,
+  validate,
+}) {
+  const [state, setState] = useState('idle') // idle | sending | sent | offline | error
+  const [validationError, setValidationError] = useState(null)
   const ccList = (cc || []).filter(Boolean)
+
+  function runValidate(form) {
+    if (!validate) return null
+    const message = validate(new FormData(form))
+    setValidationError(message || null)
+    return message || null
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
+    if (runValidate(e.currentTarget)) return
     const data = new FormData(e.currentTarget)
     data.append('_form', name)
     data.append('_subject', subject || name)
@@ -302,9 +369,16 @@ export function Form({ name, subject, to, cc = [], submitLabel = 'Send', childre
     if (to) data.append('_to', to)
     if (ccList.length) data.append('_cc', ccList.join(','))
 
+    const hasFiles = [...data.values()].some((v) => v instanceof File && v.size > 0)
+
     // No endpoint configured: hand off to the visitor's mail client so the
-    // message still reaches the agency rather than vanishing.
+    // message still reaches the agency rather than vanishing. File inputs
+    // cannot travel through mailto, so those forms show offlineMessage instead.
     if (!FORM_ENDPOINT) {
+      if (hasFiles || offlineMessage) {
+        setState('offline')
+        return
+      }
       const body = [...data.entries()]
         .filter(([k]) => !k.startsWith('_'))
         .map(([k, v]) => `${k}: ${v}`)
@@ -332,21 +406,40 @@ export function Form({ name, subject, to, cc = [], submitLabel = 'Send', childre
     }
   }
 
-  if (state === 'sent') {
+  if (state === 'sent' || state === 'offline') {
     return (
       <div className="form-status form-status--ok" role="status">
-        <h3>Thank you — we got it.</h3>
-        <p>
-          A member of our team will be in touch. If you need an answer sooner, call us at{' '}
-          <a href={org.phoneHref}>{org.phone}</a>.
-        </p>
+        {state === 'offline' ? (
+          <>
+            <h3>Thanks — one more step.</h3>
+            <p>{offlineMessage}</p>
+          </>
+        ) : (
+          <>
+            <h3>Thank you — we got it.</h3>
+            <p>
+              A member of our team will be in touch. If you need an answer sooner, call us at{' '}
+              <a href={org.phoneHref}>{org.phone}</a>.
+            </p>
+          </>
+        )}
       </div>
     )
   }
 
   return (
-    <form className="form" onSubmit={handleSubmit} noValidate={false}>
+    <form
+      className="form"
+      onSubmit={handleSubmit}
+      onChange={validate ? (e) => runValidate(e.currentTarget) : undefined}
+      noValidate={false}
+    >
       {children}
+      {validationError && (
+        <p className="form-status form-status--err form-status--tag" role="alert">
+          {validationError}
+        </p>
+      )}
       {note && <p className="form__note">{note}</p>}
       <button type="submit" className="btn btn--primary" disabled={state === 'sending'}>
         {state === 'sending' ? 'Sending…' : submitLabel}

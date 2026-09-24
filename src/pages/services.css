@@ -1,6 +1,6 @@
 .service-jump {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 .service-jump__item {
@@ -8,6 +8,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  width: 100%;
   padding: 1.1rem 1.5rem;
   border: 2px solid var(--navy-700);
   border-radius: var(--radius-lg);
@@ -19,19 +20,34 @@
   font-weight: 700;
   text-transform: uppercase;
   line-height: 1.15;
+  text-align: left;
+  cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 .service-jump__item svg {
   flex-shrink: 0;
   color: var(--accent-600);
 }
-.service-jump__item:hover {
+.service-jump__item:hover,
+.service-jump__item.is-active {
   background: var(--navy-700);
   color: #fff;
+}
+.service-jump__item:hover {
   transform: translateY(-2px);
 }
-.service-jump__item:hover svg {
+.service-jump__item:hover svg,
+.service-jump__item.is-active svg {
   color: #fff;
+}
+.service-jump__item:focus-visible {
+  outline: 3px solid var(--accent-500);
+  outline-offset: 2px;
+}
+@media (max-width: 900px) {
+  .service-jump {
+    grid-template-columns: 1fr;
+  }
 }
 
 .notice {

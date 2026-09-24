@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   adultBenefits,
   adultRequirements,
@@ -24,28 +25,70 @@ const faqSchema = {
   })),
 }
 
-// Both membership tracks used to be separate top-level tabs. They answer the
-// same question ("how do I join?"), so they live on one page with a jump menu.
+// Both membership tracks answer the same question ("how do I join?"), so they
+// live on one page as selectable tabs — same pattern as /services.
 const TRACKS = [
   {
     id: 'adult',
-    label: 'Adult membership',
+    hashes: ['adult', 'adult-apply', 'membership'],
+    label: 'Membership',
     detail: '18+ and a high school graduate',
   },
   {
     id: 'student',
+    hashes: ['student', 'student-apply'],
     label: 'Student & youth program',
     detail: 'Ages 14–18, still in high school',
   },
 ]
 
+function tabFromHash(hash) {
+  const id = (hash || '').replace(/^#/, '')
+  return TRACKS.find((t) => t.hashes.includes(id))?.id || 'adult'
+}
+
+function ageFromDob(dob) {
+  if (!dob) return null
+  const birth = new Date(`${dob}T00:00:00`)
+  if (Number.isNaN(birth.getTime())) return null
+  const today = new Date()
+  let age = today.getFullYear() - birth.getFullYear()
+  const month = today.getMonth() - birth.getMonth()
+  if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) age -= 1
+  return age
+}
+
+function needsStudentApplication(formData) {
+  const eligible = formData.get('eligible')
+  const age = ageFromDob(formData.get('dob'))
+  return eligible === 'No' || (age !== null && age < 18)
+}
+
+function membershipValidate(formData) {
+  if (!needsStudentApplication(formData)) return null
+  return (
+    <>
+      Please submit a student application.{' '}
+      <a href="#student">Go to the student &amp; youth program</a>
+    </>
+  )
+}
+
 export default function Volunteer() {
+  const { hash } = useLocation()
+  const navigate = useNavigate()
+  const tab = tabFromHash(hash)
+
+  function selectTab(id) {
+    navigate({ hash: id }, { replace: true })
+  }
+
   return (
     <>
       <StructuredData id="ld-faq" data={faqSchema} />
       <PageHero
         eyebrow="Become a member"
-        title="Join our family"
+        title="Join Today"
         lead="We are accepting applications right now. You do not need any medical experience to start — we provide the training, the uniform, and the certifications, at no cost to you."
         image="/images/youth-group.jpg"
       />
@@ -54,25 +97,45 @@ export default function Volunteer() {
       <section className="section section--tight">
         <div className="wrap">
           <p className="track-intro">Two ways to join. Pick the one that fits you:</p>
-          <div className="track-picker">
+          <div className="track-picker" role="tablist" aria-label="Ways to join">
             {TRACKS.map((t) => (
-              <a key={t.id} className="track-picker__item" href={`#${t.id}`}>
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                id={`tab-${t.id}`}
+                aria-selected={tab === t.id}
+                aria-controls={`panel-${t.id}`}
+                className={`track-picker__item${tab === t.id ? ' is-active' : ''}`}
+                onClick={() => selectTab(t.id)}
+              >
                 <span className="track-picker__label">{t.label}</span>
                 <span className="track-picker__detail">{t.detail}</span>
                 <span className="track-picker__arrow">
                   <IconArrow />
                 </span>
-              </a>
+              </button>
             ))}
           </div>
         </div>
       </section>
 
+      <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
+        {tab === 'adult' && <MembershipPanel />}
+        {tab === 'student' && <StudentPanel />}
+      </div>
+    </>
+  )
+}
+
+function MembershipPanel() {
+  return (
+    <>
       {/* ------------------------------------------------ Adult membership */}
       <section className="section section--alt" id="adult">
         <div className="wrap">
           <div className="section__head">
-            <span className="eyebrow">Adult membership</span>
+            <span className="eyebrow">Membership</span>
             <h2>Interested in joining?</h2>
             <p className="lead">
               Full-time adult members are the backbone of the agency. Here is exactly what you
@@ -122,15 +185,16 @@ export default function Volunteer() {
         <div className="wrap split">
           <div>
             <span className="eyebrow">Apply</span>
-            <h2>Adult application inquiry</h2>
+            <h2>Membership application inquiry</h2>
             <p className="lead">
               Fill this out and a member of the membership committee will reach out to you.
             </p>
             <Form
-              name="Adult membership inquiry"
-              subject="Adult membership inquiry"
+              name="Membership inquiry"
+              subject="Membership inquiry"
               to={formRecipients.adultMembership.to}
               submitLabel="Submit application"
+              validate={membershipValidate}
             >
               <Field label="First and last name" name="name" required />
               <Field label="Email" name="email" type="email" required />
@@ -172,7 +236,13 @@ export default function Volunteer() {
           </aside>
         </div>
       </section>
+    </>
+  )
+}
 
+function StudentPanel() {
+  return (
+    <>
       {/* ------------------------------------------------- Student program */}
       <section className="section section--navy" id="student">
         <div className="wrap split split--center">
@@ -204,17 +274,6 @@ export default function Volunteer() {
         </div>
       </section>
 
-      {/* ------------------------------------------------------ Student FAQ */}
-      <section className="section">
-        <div className="wrap">
-          <div className="section__head">
-            <span className="eyebrow">For parents and students</span>
-            <h2>Frequently asked questions</h2>
-          </div>
-          <Accordion items={studentFaqs} />
-        </div>
-      </section>
-
       {/* --------------------------------------------- Student application */}
       <section className="section section--alt" id="student-apply">
         <div className="wrap split">
@@ -231,7 +290,8 @@ export default function Volunteer() {
               to={formRecipients.studentProgram.to}
               submitLabel="Submit application"
             >
-              <Field label="Student's name" name="studentName" required />
+              <Field label="Student first name" name="studentFirstName" required />
+              <Field label="Student last name" name="studentLastName" required />
               <Field label="Parent or guardian's name" name="guardianName" required />
               <Field label="Student's email" name="studentEmail" type="email" required />
               <Field label="Parent or guardian's email" name="guardianEmail" type="email" required />
@@ -267,6 +327,17 @@ export default function Volunteer() {
               ))}
             </ul>
           </aside>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------ Student FAQ */}
+      <section className="section">
+        <div className="wrap">
+          <div className="section__head">
+            <span className="eyebrow">For parents and students</span>
+            <h2>Frequently asked questions</h2>
+          </div>
+          <Accordion items={studentFaqs} />
         </div>
       </section>
     </>

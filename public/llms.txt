@@ -1,6 +1,6 @@
 # Shirley Community Ambulance
 
-> Shirley Community Ambulance is a non-profit, all-volunteer emergency medical
+> Shirley Community Ambulance is a non-profit, volunteer emergency medical
 > services (EMS) agency serving the Shirley ambulance tax district in Shirley,
 > New York (Suffolk County, Long Island). Founded in 1977, it answers more than
 > 1,500 emergency calls a year with three ambulances and two first-response
@@ -19,7 +19,7 @@
 - Phone: (631) 399-5380
 - Service area: the Shirley ambulance tax district, Suffolk County, New York
 - Call volume: 1,500+ emergency calls per year
-- Fleet: 3 ambulances, 2 first-response vehicles, 1 station
+- Fleet: 3 ambulances, 3 chief vehicles, 2 first-response units, and a rehab trailer (9 vehicles)
 - Levels of care: Basic Life Support (BLS) and Advanced Life Support (ALS)
 - Availability: 24 hours a day, 365 days a year
 - Facebook: https://www.facebook.com/1287290221391033
@@ -65,7 +65,7 @@ PO Box 72, Shirley, NY 11967.
 - [Home](https://shirleycommunityambulance.org/): overview, capabilities, and the three main actions (volunteer, donate, request a stand-by).
 - [About](https://shirleycommunityambulance.org/about): agency history since 1977, service statistics, mutual-aid partners, the board of directors, medical directors, and a photo gallery.
 - [Volunteer](https://shirleycommunityambulance.org/volunteer): adult membership benefits and requirements, the student/youth program with a full FAQ, and both application forms.
-- [Services](https://shirleycommunityambulance.org/services): public CPR and first aid classes, and event stand-by requests with the list of available units.
+- [Services](https://shirleycommunityambulance.org/services): public CPR and first aid classes, event stand-by requests, and records requests.
 - [Support Us](https://shirleycommunityambulance.org/support): how to donate, what donations pay for, and the current fundraiser.
 - [Contact](https://shirleycommunityambulance.org/contact): phone, address, map, contact form, and direct extensions for each officer.
 

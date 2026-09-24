@@ -41,11 +41,19 @@ export const org = {
   membersPath: '/members',
 }
 
+/** Full years since founding. Ticks up on January 1 (not a mid-year anniversary). */
+export function yearsServing(asOf = new Date()) {
+  return asOf.getFullYear() - org.foundedYear
+}
+
 export const stats = [
   { value: '1,500+', label: 'Emergency calls answered last year' },
   { value: '24/7/365', label: 'On call, every hour of every day' },
-  { value: '3', label: 'Ambulances, plus 2 first-response vehicles' },
-  { value: `${new Date().getFullYear() - org.foundedYear}`, label: 'Years serving the Shirley community' },
+  {
+    value: '9',
+    label: 'Vehicles — 3 ambulances, 3 chief vehicles, 2 first-response units, and a rehab trailer',
+  },
+  { value: `${yearsServing()}`, label: 'Years serving the Shirley community' },
 ]
 
 export const aboutCopy = {
@@ -62,6 +70,13 @@ export const partners = [
   'Suffolk County Sheriff’s Department',
   'Suffolk County Park Police',
   'MTA Police',
+  'Mastic Beach Ambulance',
+  'Mastic Ambulance',
+  'South Country Ambulance',
+  'Mastic Fire Department',
+  'Mastic Beach Fire Department',
+  'Manorville Fire Department',
+  'Ridge Fire Department',
 ]
 
 export const capabilities = [
@@ -124,7 +139,8 @@ export const directors = [
 export const membershipCommittee = {
   members: [
     { name: 'Tracy Davis', cert: 'EMT-B' },
-    { name: 'Kim Stavola', cert: 'EMT-B' },
+    { name: 'Humberto Diaz', cert: 'EMT-P' },
+    { name: 'Ashley Vega', cert: 'EMT-P' },
   ],
   // Committee-level contact details, deliberately not attributed to an
   // individual so the site doesn't need editing when the roster changes.
@@ -143,8 +159,8 @@ export const studentAdvisors = [
   { name: 'Rachel Leuders', cert: 'EMT-B' },
   { name: 'Melissa Fiore', cert: 'EMT-B' },
   { name: 'Kayla Roof', cert: 'EMT-B' },
-  { name: 'Emily Marmol', cert: 'EMT-B' },
-  { name: 'Arthur Reilly', cert: 'EMT-B' },
+  { name: 'Emily Marmol', cert: 'EMT-P' },
+  { name: 'Arthur Reilly', cert: 'EMT-P' },
 ]
 
 /** Look an officer's address up by role so routing can't drift out of sync. */
@@ -169,6 +185,7 @@ export const formRecipients = {
   adultMembership: { to: membershipCommittee.contact.email },
   studentProgram: { to: membershipCommittee.contact.email },
   generalContact: { to: emailFor('Secretary') },
+  recordsRequest: { to: emailFor('Secretary') },
 }
 
 export const adultBenefits = [
@@ -248,7 +265,7 @@ export const standbyUnits = [
 ]
 
 export const gallery = [
-  { src: '/images/hero-crew.jpg', alt: 'Three Shirley Community Ambulance rigs parked under the station apparatus bay canopy.', caption: 'The fleet at quarters' },
+  { src: '/images/hero-crew.jpg', alt: 'Three Shirley Community Ambulance rigs parked under the station apparatus bay canopy.', caption: 'NYU Langone - Suffolk' },
   { src: '/images/students.jpg', alt: 'Student program members in blue uniforms lined up in front of the Shirley Community Ambulance station between two ambulances.', caption: 'Student program class photo' },
   { src: '/images/station.jpg', alt: 'An ambulance parked beside a Suffolk County Police medevac helicopter on a landing zone at night.', caption: 'Medevac landing zone' },
   { src: '/images/youth-group.jpg', alt: 'Members holding a Shirley Community Ambulance banner in front of an ambulance during the winter holidays.', caption: 'Holiday detail' },

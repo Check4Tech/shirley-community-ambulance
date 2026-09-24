@@ -18,18 +18,29 @@
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 0.2rem 1rem;
+  width: 100%;
   padding: 1.25rem 1.5rem;
   border: 2px solid var(--navy-700);
   border-radius: var(--radius-lg);
-  text-decoration: none;
-  color: var(--navy-800);
   background: #fff;
+  color: var(--navy-800);
+  font-family: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
-.track-picker__item:hover {
+.track-picker__item:hover,
+.track-picker__item.is-active {
   background: var(--navy-700);
   color: #fff;
+}
+.track-picker__item:hover {
   transform: translateY(-2px);
+}
+.track-picker__item:focus-visible {
+  outline: 3px solid var(--accent-500);
+  outline-offset: 2px;
 }
 .track-picker__label {
   font-family: var(--font-display);
@@ -43,7 +54,8 @@
   font-size: 0.95rem;
   color: var(--ink-faint);
 }
-.track-picker__item:hover .track-picker__detail {
+.track-picker__item:hover .track-picker__detail,
+.track-picker__item.is-active .track-picker__detail {
   color: #b9cbe0;
 }
 .track-picker__arrow {
@@ -53,7 +65,8 @@
   place-items: center;
   color: var(--accent-600);
 }
-.track-picker__item:hover .track-picker__arrow {
+.track-picker__item:hover .track-picker__arrow,
+.track-picker__item.is-active .track-picker__arrow {
   color: #fff;
 }
 

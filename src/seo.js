@@ -11,7 +11,7 @@ export const PAGE_SEO = {
   '/': {
     title: 'Shirley Community Ambulance | Volunteer EMS in Shirley, NY',
     description:
-      'Shirley Community Ambulance is a non-profit, all-volunteer EMS agency serving the Shirley ambulance tax district in Shirley, New York since 1977. We answer over 1,500 emergency calls a year with Advanced and Basic Life Support, 24 hours a day. Call 911 for emergencies or (631) 399-5380 for business.',
+      'Shirley Community Ambulance is a non-profit, volunteer EMS agency serving the Shirley ambulance tax district in Shirley, New York since 1977. We answer over 1,500 emergency calls a year with Advanced and Basic Life Support, 24 hours a day. Call 911 for emergencies or (631) 399-5380 for business.',
     image: '/images/hero-crew.jpg',
   },
   '/about': {
@@ -27,9 +27,9 @@ export const PAGE_SEO = {
     image: '/images/youth-group.jpg',
   },
   '/services': {
-    title: 'CPR Classes & Event Stand-By Requests | Shirley Community Ambulance',
+    title: 'CPR Classes, Event Stand-By & Records | Shirley Community Ambulance',
     description:
-      'Book an American Heart Association CPR/AED, First Aid, or BLS for Healthcare Providers class with Shirley Community Ambulance (minimum three people), or request ambulance, bike team, or rehab-unit coverage for an event in Shirley, New York.',
+      'Book an American Heart Association CPR/AED, First Aid, or BLS for Healthcare Providers class with Shirley Community Ambulance (minimum three people), request ambulance, bike team, or rehab-unit coverage for an event, or send a records request in Shirley, New York.',
     image: '/images/hero-crew.jpg',
   },
   '/support': {
@@ -39,7 +39,7 @@ export const PAGE_SEO = {
     image: '/images/ambulance.jpg',
   },
   '/fundraiser': {
-    title: `${fundraiser.name} | Shirley Community Ambulance`,
+    title: `Events | Shirley Community Ambulance`,
     description:
       `Enter ${fundraiser.name} from Shirley Community Ambulance. Only ${fundraiser.ticketCount} tickets are being sold for two travel prizes, and proceeds support volunteer EMS equipment, training, and supplies in Shirley, New York.`,
     image: '/images/raffle.png',

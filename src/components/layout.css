@@ -272,8 +272,20 @@
   .nav-desktop {
     display: none;
   }
+  .site-header__inner {
+    justify-content: flex-start;
+  }
+  .site-header__actions {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+  /* Donate stays in the opened mobile menu footer. */
+  .site-header__actions .btn--primary {
+    display: none;
+  }
   .nav-toggle {
     display: inline-flex;
+    margin-left: auto;
   }
   .nav-mobile.is-open {
     display: block;

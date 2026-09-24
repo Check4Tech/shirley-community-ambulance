@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { donationUses, fundraiser, org } from '../data/site'
 import { CtaBand, PageHero } from '../components/UI'
-import { IconArrow, IconHeart } from '../components/Icons'
+import { IconHeart } from '../components/Icons'
 import './support.css'
 
 export default function Support() {
@@ -10,7 +10,7 @@ export default function Support() {
       <PageHero
         eyebrow="Support us"
         title="Donate to the volunteers of Shirley"
-        lead="Every member of this agency is a volunteer. Your donation does not pay salaries — it buys the equipment, training, and supplies that go out the door on every call."
+        lead="Every member of this agency is dedicated to serving our community. Your donation does not pay salaries — it buys the equipment, training, and supplies that go out the door on every call."
         image="/images/ambulance.jpg"
       />
 
@@ -70,22 +70,6 @@ export default function Support() {
           </aside>
         </div>
       </section>
-
-      {/* Short teaser so /support#fundraiser still lands somewhere useful. */}
-      {fundraiser.active && (
-        <section className="section section--alt" id="fundraiser">
-          <div className="wrap">
-            <div className="section__head">
-              <span className="eyebrow">Happening now</span>
-              <h2>{fundraiser.name}</h2>
-              <p className="lead">{fundraiser.blurb}</p>
-            </div>
-            <Link className="btn btn--primary" to="/fundraiser">
-              See the prizes <IconArrow />
-            </Link>
-          </div>
-        </section>
-      )}
 
       <CtaBand
         eyebrow="Give time instead"

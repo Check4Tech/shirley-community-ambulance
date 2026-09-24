@@ -9,7 +9,7 @@ export default function Fundraiser() {
     return (
       <>
         <PageHero
-          eyebrow="Fundraiser"
+          eyebrow="Events"
           title="No campaign is running right now"
           lead="When we have an active raffle or fundraiser, it will live on this page. In the meantime, a donation still goes straight to equipment, training, and supplies."
           image="/images/ambulance.jpg"
@@ -17,7 +17,7 @@ export default function Fundraiser() {
         <CtaBand
           eyebrow="Support the agency"
           title="Give what you can"
-          body="Every member of this agency is a volunteer. Your donation does not pay salaries — it buys what rolls out the door."
+          body="Every member of this agency is dedicated to serving our community. Your donation does not pay salaries — it buys what rolls out the door."
           primary={{ to: '/support', label: 'Donate' }}
           secondary={{ to: '/volunteer', label: 'Become a volunteer' }}
         />

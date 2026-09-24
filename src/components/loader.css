@@ -16,8 +16,8 @@
    depth rather than a flat horizontal squash. */
 .loader__stage {
   perspective: 900px;
-  width: 104px;
-  height: 104px;
+  width: min(1274px, 80vmin);
+  height: min(1274px, 80vmin);
 }
 
 .loader__card {

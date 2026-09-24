@@ -9,7 +9,7 @@ const NAV = [
   { to: '/volunteer', label: 'Volunteer' },
   { to: '/services', label: 'Services' },
   { to: '/support', label: 'Support' },
-  ...(fundraiser.active ? [{ to: '/fundraiser', label: 'Fundraiser' }] : []),
+  ...(fundraiser.active ? [{ to: '/fundraiser', label: 'Events' }] : []),
   { to: '/contact', label: 'Contact' },
 ]
 
@@ -147,7 +147,7 @@ function Footer() {
         <div className="site-footer__brand">
           <img src="/images/shield.png" alt="" width="72" height="72" />
           <p className="site-footer__mission">
-            A non-profit, all-volunteer ambulance agency serving the Shirley ambulance tax
+            A non-profit, volunteer ambulance agency serving the Shirley ambulance tax
             district since {org.foundedYear}.
           </p>
           <p className="site-footer__follow">Follow us</p>
@@ -216,7 +216,7 @@ function Footer() {
             </li>
             {fundraiser.active && (
               <li>
-                <Link to="/fundraiser">Fundraiser</Link>
+                <Link to="/fundraiser">Events</Link>
               </li>
             )}
           </ul>
@@ -233,11 +233,14 @@ function Footer() {
               <Link to="/services#standby-form">Request a stand-by</Link>
             </li>
             <li>
+              <Link to="/services#records">Records request</Link>
+            </li>
+            <li>
               <Link to="/support">Donate</Link>
             </li>
             {fundraiser.active && (
               <li>
-                <Link to="/fundraiser">Fundraiser</Link>
+                <Link to="/fundraiser">Events</Link>
               </li>
             )}
             <li>

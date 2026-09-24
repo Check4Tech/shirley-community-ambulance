@@ -1,6 +1,6 @@
-import { directors, formRecipients, org } from '../data/site'
+import { formRecipients, org } from '../data/site'
 import { Field, Form, PageHero } from '../components/UI'
-import { IconFacebook, IconInstagram, IconMail, IconPhone, IconPin } from '../components/Icons'
+import { IconFacebook, IconInstagram, IconPhone, IconPin } from '../components/Icons'
 import './contact.css'
 
 export default function Contact() {
@@ -10,7 +10,6 @@ export default function Contact() {
         eyebrow="Contact us"
         title="Get in touch"
         lead="We love our community — feel free to visit during normal business hours, call the station, or send us a message."
-        image="/images/station.jpg"
       />
 
       {/* -------------------------------------------- Emergency reminder */}
@@ -126,21 +125,6 @@ export default function Contact() {
                 Get directions
               </a>
             </p>
-
-            <h3 className="contact__officers-head">Reach an officer directly</h3>
-            <ul className="officer-list">
-              {directors.map((d) => (
-                <li key={d.email}>
-                  <span className="officer-list__role">{d.role}</span>
-                  <a href={`mailto:${d.email}`}>
-                    <IconMail /> {d.email}
-                  </a>
-                  <a href={`${org.phoneHref},${d.ext}`}>
-                    <IconPhone /> ext. {d.ext}
-                  </a>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </section>

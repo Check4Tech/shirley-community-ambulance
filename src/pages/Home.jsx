@@ -63,7 +63,7 @@ export default function Home() {
             on call 24/7.
           </h1>
           <p className="hero__lead">
-            {org.name} is an all-volunteer, non-profit ambulance agency answering more than
+            {org.name} is a volunteer, non-profit ambulance agency answering more than
             1,500 emergency calls a year for the Shirley ambulance tax district — with both
             Advanced and Basic Life Support.
           </p>

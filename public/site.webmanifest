@@ -1,7 +1,7 @@
 {
   "name": "Shirley Community Ambulance",
   "short_name": "Shirley EMS",
-  "description": "Non-profit, all-volunteer EMS agency serving Shirley, New York since 1977.",
+  "description": "Non-profit, volunteer EMS agency serving Shirley, New York since 1977.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
