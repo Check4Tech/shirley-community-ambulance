@@ -249,9 +249,34 @@ export function CtaBand({
 /* ------------------------------------------------------------------ */
 const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || ''
 
-export function Field({ label, name, type = 'text', required = false, options, rows, help }) {
+export function Field({
+  label,
+  name,
+  type = 'text',
+  required = false,
+  options,
+  rows,
+  help,
+  value,
+  onChange,
+  autoComplete,
+  autoCapitalize,
+  spellCheck,
+  disabled,
+}) {
   const id = `f-${name}`
-  const common = { id, name, required, 'aria-describedby': help ? `${id}-help` : undefined }
+  const common = {
+    id,
+    name,
+    required,
+    disabled,
+    'aria-describedby': help ? `${id}-help` : undefined,
+    ...(value !== undefined ? { value } : null),
+    ...(onChange ? { onChange } : null),
+    ...(autoComplete ? { autoComplete } : null),
+    ...(autoCapitalize ? { autoCapitalize } : null),
+    ...(spellCheck !== undefined ? { spellCheck } : null),
+  }
 
   return (
     <p className="field">

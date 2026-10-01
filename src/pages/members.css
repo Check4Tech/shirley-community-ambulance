@@ -101,3 +101,26 @@ h1.members__title {
   font-weight: 600;
   color: var(--navy-700);
 }
+
+.members__error {
+  margin: 0 0 1.15rem;
+  padding: 0.85rem 1rem;
+  background: var(--alert-050);
+  border: 1px solid var(--alert-500);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  color: var(--alert-700);
+}
+
+.members__signed-in .members__status {
+  margin-bottom: 1.15rem;
+}
+
+.members__status strong {
+  color: var(--navy-800);
+}
+
+.members__form .btn:disabled {
+  opacity: 0.72;
+  cursor: progress;
+}
