@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { donationUses, fundraiser, org } from '../data/site'
+import { donationUses, org, shopItems } from '../data/site'
 import { CtaBand, PageHero } from '../components/UI'
 import { IconHeart } from '../components/Icons'
 import './support.css'
+import './shop.css'
 
 export default function Support() {
   return (
@@ -53,11 +53,6 @@ export default function Support() {
               <li>
                 <a href="/volunteer">Volunteer your time</a> — our most valuable donation
               </li>
-              {fundraiser.active && (
-                <li>
-                  Buy a ticket for the <Link to="/fundraiser">{fundraiser.name}</Link>
-                </li>
-              )}
               <li>
                 <a href={org.facebook} target="_blank" rel="noreferrer">
                   Follow and share us on Facebook
@@ -68,6 +63,33 @@ export default function Support() {
               </li>
             </ul>
           </aside>
+        </div>
+      </section>
+
+      <section className="section section--alt" id="shop">
+        <div className="wrap">
+          <span className="eyebrow">Shop</span>
+          <h2>Shirley Ambulance’s shop</h2>
+          <p className="shop-note">
+            Every purchase helps keep emergency care rolling. Pickup is at {org.station.full}.
+            Size, quantity, and payment are completed on our Zeffy shop — click an item to open
+            it in a new tab.
+          </p>
+          <ul className="shop-grid">
+            {shopItems.map((item) => (
+              <li key={item.name}>
+                <a className="shop-card" href={org.shopUrl} target="_blank" rel="noreferrer">
+                  <img src={item.image} alt={item.alt} />
+                  <div className="shop-card__body">
+                    <h3>{item.name}</h3>
+                    <p className="shop-card__price">{item.price}</p>
+                    <p>{item.description}</p>
+                    <span className="shop-card__cta">Open the shop</span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

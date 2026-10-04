@@ -10,6 +10,7 @@ const pages = [
   ['about', '/about'],
   ['volunteer', '/volunteer'],
   ['services', '/services'],
+  ['events', '/fundraiser'],
   ['support', '/support'],
   ['contact', '/contact'],
 ]
@@ -67,7 +68,47 @@ for (const [name, path] of pages) {
   await checkPage(page, path, '1440')
   await page.screenshot({ path: `${OUT}/${name}-desktop.png`, fullPage: true })
   console.log(`shot ${name}-desktop.png`)
+
+  if (path === '/support') {
+    const shop = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('#shop a.shop-card')]
+      return {
+        count: cards.length,
+        hrefs: [...new Set(cards.map((a) => a.href))],
+        targets: [...new Set(cards.map((a) => a.target))],
+      }
+    })
+    const zeffy = 'https://www.zeffy.com/en-US/ticketing/shirley-ambulances-shop'
+    if (shop.count !== 5) problems.push(`[shop] expected 5 product cards on /support, found ${shop.count}`)
+    if (shop.hrefs.length !== 1 || shop.hrefs[0] !== zeffy)
+      problems.push(`[shop] product cards should open ${zeffy}, got ${shop.hrefs.join(', ')}`)
+    if (shop.targets.length !== 1 || shop.targets[0] !== '_blank')
+      problems.push(`[shop] product cards should open in a new tab, got ${shop.targets.join(', ')}`)
+    console.log(`support shop: ${shop.count} cards`)
+  }
 }
+
+const expectedNav = ['About', 'Volunteer', 'Services', 'Events', 'Support', 'Contact']
+const desktopNav = await page.$$eval('.nav-desktop a', (els) => els.map((a) => a.textContent.trim()))
+const mobileNav = await page.$$eval('#mobile-nav nav a', (els) => els.map((a) => a.textContent.trim()))
+if (desktopNav.join('|') !== expectedNav.join('|'))
+  problems.push(`[nav] desktop order is ${desktopNav.join(', ')}`)
+if (mobileNav.join('|') !== ['Home', ...expectedNav].join('|'))
+  problems.push(`[nav] mobile order is ${mobileNav.join(', ')}`)
+if ([...desktopNav, ...mobileNav].includes('Store')) problems.push('[nav] Store item is still in the navbar')
+console.log(`nav desktop: ${desktopNav.join(', ')}`)
+console.log(`nav mobile: ${mobileNav.join(', ')}`)
+
+await page.goto(`${BASE}/shop`, { waitUntil: 'networkidle' })
+await page
+  .waitForFunction(() => location.pathname === '/support' && location.hash === '#shop', undefined, {
+    timeout: 5000,
+  })
+  .catch(() => {})
+const shopLanded = await page.evaluate(() => location.pathname + location.hash)
+if (shopLanded !== '/support#shop')
+  problems.push(`[redirect] /shop landed on ${shopLanded}, expected /support#shop`)
+else console.log('redirect /shop -> /support#shop')
 
 // ------------------------------------------- board of directors, all widths
 for (const w of [1440, 1100, 1000, 900, 768, 390]) {

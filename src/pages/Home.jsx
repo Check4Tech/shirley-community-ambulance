@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { capabilities, fundraiser, gallery, org } from '../data/site'
+import { capabilities, gallery, org } from '../data/site'
 import { CtaBand, Gallery, StatBand } from '../components/UI'
 import {
   IconArrow,
@@ -125,29 +125,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ---------------------------------------------------- Fundraiser */}
-      {fundraiser.active && (
-        <section className="section fundraiser-strip">
-          <div className="wrap split split--center">
-            <div className="prose">
-              <span className="eyebrow">Happening now</span>
-              <h2>{fundraiser.name}</h2>
-              <p>{fundraiser.blurb}</p>
-              <Link className="btn btn--primary" to="/fundraiser">
-                See the prizes <IconArrow />
-              </Link>
-            </div>
-            <figure className="media-figure fundraiser-strip__figure">
-              <img
-                src={fundraiser.prizes[0].image}
-                alt={fundraiser.prizes[0].alt}
-                loading="lazy"
-              />
-            </figure>
-          </div>
-        </section>
-      )}
 
       {/* ------------------------------------------------------ Who we are */}
       <section className="section section--alt">

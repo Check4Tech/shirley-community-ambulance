@@ -38,6 +38,7 @@ export const org = {
   instagram: 'https://www.instagram.com/shirleyambulance/',
   donateUrl:
     'https://www.zeffy.com/en-US/donation-form/04b76ba1-f8ce-4a3a-b2a9-378aadef47d7',
+  shopUrl: 'https://www.zeffy.com/en-US/ticketing/shirley-ambulances-shop',
   membersPath: '/members',
 }
 
@@ -273,30 +274,104 @@ export const gallery = [
   { src: '/images/ambulance.jpg', alt: 'Ambulance 5-38-18 responding with emergency lights on a wet roadway.', caption: 'Ambulance 18 responding', credit: '© Suffolk Fire Photos' },
 ]
 
-export const fundraiser = {
-  active: true,
-  name: 'The Grand Getaway Raffle',
-  blurb:
-    'Two incredible travel prizes, one great cause. Only 400 tickets are being sold, so the odds have never looked better.',
-  ticketCount: 400,
-  ctaLabel: 'Purchase tickets',
-  // Tickets were sold through the agency's donation platform on the original site.
-  ctaUrl: org.donateUrl,
-  prizes: [
-    {
-      title: 'Glittering Greek Isles',
-      body: 'Island-hopping through the Aegean.',
-      image: '/images/greek-isles.jpg',
-      alt: 'Whitewashed buildings and blue domes above the sea in the Greek islands.',
-    },
-    {
-      title: 'Riviera Maya Magic',
-      body: 'Sun, sand, and cenotes on Mexico’s Caribbean coast.',
-      image: '/images/riviera-maya.jpg',
-      alt: 'Turquoise Caribbean water and palm trees on the Riviera Maya coastline.',
-    },
-  ],
+/**
+ * Community events shown on the Events page. `date` is ISO (YYYY-MM-DD) so
+ * rows can be sorted; `dateLabel` is the string visitors actually see.
+ * Leave past rows in this list. The page hides an event on the Shirley
+ * calendar day after `date` (it still shows all day on the event date).
+ * Add, remove, or rewrite rows here — the page and the Events nav item stay
+ * up even when this list is empty.
+ */
+export const events = [
+  {
+    name: 'Holiday Parade',
+    date: '2026-12-05',
+    dateLabel: 'December 5, 2026',
+  },
+  {
+    name: "Children's Holiday Party",
+    date: '2026-12-12',
+    dateLabel: 'December 12, 2026',
+  },
+  {
+    name: 'Christmas Party',
+    date: '2026-12-19',
+    dateLabel: 'December 19, 2026',
+  },
+  {
+    name: 'Installation of Officers Dinner',
+    date: '2027-01-23',
+    dateLabel: 'January 23, 2027',
+  },
+]
+
+/** Shirley, NY. Event visibility follows this calendar, not the visitor's. */
+const SHIRLEY_TIME_ZONE = 'America/New_York'
+
+/** Calendar date (YYYY-MM-DD) of `asOf` in America/New_York. */
+export function shirleyCalendarDate(asOf = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: SHIRLEY_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(asOf)
+  const value = (type) => parts.find((part) => part.type === type).value
+  return `${value('year')}-${value('month')}-${value('day')}`
 }
+
+/**
+ * Events still on the calendar. An event dated December 5 stays through
+ * that whole Shirley day and drops off starting December 6. `list` defaults
+ * to the source `events` array, which is never mutated.
+ */
+export function upcomingEvents(asOf = new Date(), list = events) {
+  const today = shirleyCalendarDate(asOf)
+  return list
+    .filter((event) => event.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))
+}
+
+export const shopItems = [
+  {
+    name: '(PREORDER) 50th Anniversary Challenge Coin',
+    price: '$20',
+    description:
+      'Preorder a commemorative coin celebrating 50 years of Shirley Community Ambulance. Available for pick-up by February 2027.',
+    image: '/images/shop-coin-50th.jpg',
+    alt: 'Star of Life shaped challenge coin marking Shirley Community Ambulance’s 50th anniversary, 1977–2027, with an ambulance on one side.',
+  },
+  {
+    name: '"We Support Shirley Community Ambulance" Sticker',
+    price: '$5',
+    description: '3×3 sticker.',
+    image: '/images/shop-sticker.jpg',
+    alt: 'Round white sticker reading We Support Shirley Community Ambulance around the agency shield.',
+  },
+  {
+    name: 'Shirley EMS Challenge Coin — Limited Availability',
+    price: '$15',
+    description: 'Our standard challenge coin, available for pick-up now.',
+    image: '/images/shop-coin.jpg',
+    alt: 'Round Shirley Community Ambulance challenge coin, shield on one side and a saint on the other.',
+  },
+  {
+    name: 'Breast Cancer Awareness T-shirt',
+    price: '$30',
+    description:
+      'Help support breast cancer awareness and your local ambulance company. Sizes S–XL. Choose your size on the shop page.',
+    image: '/images/shop-shirt.png',
+    alt: 'Pink breast cancer awareness t-shirt with a Shirley Community Ambulance ambulance graphic on the back.',
+  },
+  {
+    name: 'Breast Cancer Awareness T-shirt (2XL–4XL)',
+    price: '$34',
+    description:
+      'The same breast cancer awareness shirt in sizes 2XL–4XL. Choose your size on the shop page.',
+    image: '/images/shop-shirt.png',
+    alt: 'Pink breast cancer awareness t-shirt with a Shirley Community Ambulance ambulance graphic on the back.',
+  },
+]
 
 export const donationUses = [
   { amount: '$25', body: 'Stocks a jump bag with bandages, gauze, and airway supplies.' },

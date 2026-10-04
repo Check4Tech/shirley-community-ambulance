@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { fundraiser, org } from '../data/site'
+import { org } from '../data/site'
 import { IconFacebook, IconInstagram, IconMenu, IconPhone, IconPin, IconX } from './Icons'
 import './layout.css'
 
@@ -8,8 +8,8 @@ const NAV = [
   { to: '/about', label: 'About' },
   { to: '/volunteer', label: 'Volunteer' },
   { to: '/services', label: 'Services' },
+  { to: '/fundraiser', label: 'Events' },
   { to: '/support', label: 'Support' },
-  ...(fundraiser.active ? [{ to: '/fundraiser', label: 'Events' }] : []),
   { to: '/contact', label: 'Contact' },
 ]
 
@@ -214,11 +214,9 @@ function Footer() {
             <li>
               <Link to="/about#gallery">Photo gallery</Link>
             </li>
-            {fundraiser.active && (
-              <li>
-                <Link to="/fundraiser">Events</Link>
-              </li>
-            )}
+            <li>
+              <Link to="/fundraiser">Events</Link>
+            </li>
           </ul>
         </div>
 
@@ -236,13 +234,14 @@ function Footer() {
               <Link to="/services#records">Records request</Link>
             </li>
             <li>
+              <Link to="/support#shop">Shop</Link>
+            </li>
+            <li>
               <Link to="/support">Donate</Link>
             </li>
-            {fundraiser.active && (
-              <li>
-                <Link to="/fundraiser">Events</Link>
-              </li>
-            )}
+            <li>
+              <Link to="/fundraiser">Events</Link>
+            </li>
             <li>
               <Link to={org.membersPath}>Members only</Link>
             </li>

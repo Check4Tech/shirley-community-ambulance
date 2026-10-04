@@ -78,6 +78,8 @@ export default function App() {
           <Route path="/volunteer" element={<Volunteer />} />
           <Route path="/services" element={<Services />} />
           <Route path="/support" element={<Support />} />
+          {/* The store used to be its own page. Merchandise now lives on Support. */}
+          <Route path="/shop" element={<Navigate to="/support#shop" replace />} />
           <Route path="/fundraiser" element={<Fundraiser />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/members" element={<Members />} />

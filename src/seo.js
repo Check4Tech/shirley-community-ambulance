@@ -1,4 +1,4 @@
-import { fundraiser, org } from './data/site'
+import { org } from './data/site'
 
 export const SITE_URL = 'https://shirleycommunityambulance.org'
 
@@ -35,14 +35,14 @@ export const PAGE_SEO = {
   '/support': {
     title: 'Donate to Shirley Community Ambulance | Support Volunteer EMS',
     description:
-      'Every member of Shirley Community Ambulance is a volunteer, so donations buy equipment, training, and supplies rather than salaries. Give online, mail a check to PO Box 72, Shirley NY 11967, or enter the current fundraiser raffle.',
+      'Every member of Shirley Community Ambulance is a volunteer, so donations buy equipment, training, and supplies rather than salaries. Give online or mail a check to PO Box 72, Shirley NY 11967. The same page lists challenge coins, stickers, and shirts; checkout is on Zeffy and pickup is at the station in Shirley, NY.',
     image: '/images/ambulance.jpg',
   },
   '/fundraiser': {
-    title: `Events | Shirley Community Ambulance`,
+    title: 'Events | Shirley Community Ambulance',
     description:
-      `Enter ${fundraiser.name} from Shirley Community Ambulance. Only ${fundraiser.ticketCount} tickets are being sold for two travel prizes, and proceeds support volunteer EMS equipment, training, and supplies in Shirley, New York.`,
-    image: '/images/raffle.png',
+      'Upcoming community events with Shirley Community Ambulance in Shirley, New York, including the holiday parade, Christmas party, children’s holiday party, and installation of officers dinner.',
+    image: '/images/parade.jpg',
   },
   '/contact': {
     title: 'Contact Us | Shirley Community Ambulance, Shirley NY',
