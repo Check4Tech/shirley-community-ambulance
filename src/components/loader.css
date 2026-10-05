@@ -12,6 +12,17 @@
   min-height: 60vh;
 }
 
+/* Same flipping shield, sized to sit inside a panel instead of the page. */
+.loader--compact {
+  gap: 0.85rem;
+  padding: 1.25rem 1rem 1.75rem;
+}
+
+.loader--compact .loader__stage {
+  width: 96px;
+  height: 96px;
+}
+
 /* The perspective lives on the stage, not the card, so the rotation reads as
    depth rather than a flat horizontal squash. */
 .loader__stage {

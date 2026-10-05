@@ -80,6 +80,7 @@ function Header() {
           <NavLink
             className={({ isActive }) => `members-login${isActive ? ' active' : ''}`}
             to={org.membersPath}
+            end
           >
             Members Login
           </NavLink>

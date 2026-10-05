@@ -56,6 +56,74 @@ export const PAGE_SEO = {
       'Sign in to the Shirley Community Ambulance member portal. For help reaching the station, call (631) 399-5380. For emergencies, always call 911.',
     image: '/images/station.jpg',
   },
+  '/members/home': {
+    title: 'Members Home | Shirley Community Ambulance',
+    description:
+      'Message board for Shirley Community Ambulance members in Shirley, New York.',
+    image: '/images/station.jpg',
+  },
+  '/members/calendar': {
+    title: 'Members Calendar | Shirley Community Ambulance',
+    description:
+      'Monthly board meeting, general meeting, and training nights for Shirley Community Ambulance members.',
+    image: '/images/station.jpg',
+  },
+  '/members/roster': {
+    title: 'Members | Shirley Community Ambulance',
+    description: 'Active member roster for Shirley Community Ambulance.',
+    image: '/images/station.jpg',
+  },
+  '/members/students': {
+    title: 'Students | Shirley Community Ambulance',
+    description: 'Student and youth members of Shirley Community Ambulance.',
+    image: '/images/station.jpg',
+  },
+  '/members/probationary': {
+    title: 'Probationary | Shirley Community Ambulance',
+    description: 'Probationary members of Shirley Community Ambulance.',
+    image: '/images/station.jpg',
+  },
+  '/members/bylaws': {
+    title: 'Appendix C, Proposed By-Law Amendment | Shirley Community Ambulance',
+    description:
+      'Proposed by-law amendment form for Shirley Community Ambulance. An entry stays in the browser session only.',
+    image: '/images/station.jpg',
+  },
+  '/members/forms/bylaw': {
+    title: 'Appendix C, Proposed By-Law Amendment | Shirley Community Ambulance',
+    description:
+      'Proposed by-law amendment form for Shirley Community Ambulance. An entry stays in the browser session only.',
+    image: '/images/station.jpg',
+  },
+  '/members/forms/bylaw/submissions': {
+    title: 'Bylaw Submissions | Shirley Community Ambulance',
+    description: 'Proposed by-law amendments submitted by Shirley Community Ambulance members.',
+    image: '/images/station.jpg',
+  },
+  '/members/forms/uniform': {
+    title: 'Uniform Request | Shirley Community Ambulance',
+    description:
+      'Request a uniform item. Requests stay in the browser session only.',
+    image: '/images/station.jpg',
+  },
+  '/members/forms/reimbursement': {
+    title: 'Reimbursement | Shirley Community Ambulance',
+    description:
+      'Submit a reimbursement for this visit. Entries stay in the browser session only.',
+    image: '/images/station.jpg',
+  },
+  '/members/forms/bls-preceptor': {
+    title: 'BLS Preceptor Form | Shirley Community Ambulance',
+    description:
+      'Fill out a BLS preceptor form. Entries stay in the browser session only.',
+    image: '/images/station.jpg',
+  },
+  '/members/forms/als-preceptor': {
+    title: 'ALS Preceptor Form | Shirley Community Ambulance',
+    description:
+      'Fill out an ALS preceptor form. Entries stay in the browser session only.',
+    image: '/images/station.jpg',
+  },
 }
 
 export const DEFAULT_SEO = PAGE_SEO['/']
@@ -98,7 +166,10 @@ export function setStructuredData(id, json) {
 }
 
 export function applySeo(pathname) {
-  const seo = PAGE_SEO[pathname] || DEFAULT_SEO
+  const seo =
+    PAGE_SEO[pathname] ||
+    (/^\/members\/forms\/bylaw\/\d+$/.test(pathname) ? PAGE_SEO['/members/forms/bylaw'] : null) ||
+    DEFAULT_SEO
   const url = SITE_URL + (pathname === '/' ? '/' : pathname)
 
   document.title = seo.title

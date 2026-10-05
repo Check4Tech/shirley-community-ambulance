@@ -1,0 +1,1532 @@
+.members-area {
+  background: var(--surface-alt);
+  min-height: 60vh;
+}
+
+.members-nav {
+  position: sticky;
+  /* The public header is already sticky at top: 0. Offset by its height so
+     this bar stays visible underneath it instead of sliding behind it. */
+  top: var(--header-h);
+  z-index: 80;
+  max-width: 100%;
+  background: var(--navy-800);
+  color: #dce6f2;
+  border-bottom: 3px solid var(--accent-500);
+}
+
+.members-nav a,
+.members-nav a:hover,
+.members-nav a:focus,
+.members-nav button {
+  text-decoration: none;
+}
+
+.members-nav__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  padding: 0.7rem 0;
+}
+
+.members-nav__who {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--accent-200);
+}
+
+.members-nav__who strong {
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.members-nav nav {
+  flex: 1 1 18rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.members-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.members-nav li {
+  margin: 0;
+}
+
+.members-nav a,
+.members-nav__signout,
+.members-nav__forms-btn {
+  display: inline-block;
+  padding: 0.45rem 0.7rem;
+  border: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: transparent;
+  color: #dce6f2;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.members-nav a:hover,
+.members-nav__signout:hover,
+.members-nav__forms-btn:hover,
+.members-nav__forms-btn[aria-expanded='true'] {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.members-nav a.active,
+.members-nav__forms-btn.is-current {
+  color: #fff;
+  box-shadow: inset 0 -3px 0 var(--accent-500);
+}
+
+.members-nav__forms {
+  position: relative;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.members-nav__caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 0.4rem;
+  border-right: 0.28rem solid transparent;
+  border-left: 0.28rem solid transparent;
+  border-top: 0.34rem solid currentColor;
+  vertical-align: 0.12rem;
+}
+
+.members-nav .members-nav__menu {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0;
+  position: absolute;
+  z-index: 30;
+  top: 100%;
+  left: 0;
+  min-width: 13.5rem;
+  max-width: min(18rem, calc(100vw - 1.25rem));
+  margin: 0;
+  padding: 0.2rem 0;
+  list-style: none;
+  background: var(--navy-900);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0;
+  box-shadow: var(--shadow-md);
+}
+
+.members-nav__menu[hidden] {
+  display: none !important;
+}
+
+.members-nav__menu a {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-size: 1.12rem;
+  white-space: normal;
+}
+
+.members-nav__menu a.active {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 3px 0 0 var(--accent-500);
+}
+
+.members-nav__forms-btn:focus-visible,
+.members-nav__menu a:focus-visible {
+  outline: 2px solid var(--accent-200);
+  outline-offset: 2px;
+}
+
+.members-nav__signout {
+  margin-left: auto;
+}
+
+.members-panel h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+.members-panel__head {
+  max-width: 68ch;
+  margin-bottom: 1.75rem;
+}
+
+.members-panel__head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.members-panel__head .lead {
+  margin-bottom: 0;
+}
+
+.members-panel__error,
+.members-panel__empty {
+  margin: 0 auto;
+  max-width: 46rem;
+  padding: 1rem 1.15rem;
+  border-radius: 0;
+}
+
+.members-panel__error {
+  background: var(--alert-050);
+  border: 1px solid var(--alert-500);
+  color: var(--alert-700);
+}
+
+.members-panel__empty {
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+/* Members home: bulletin about 75% and this year's calls about 25%, flush,
+   one shared height. Size the row from the content area, not 75vw+25vw.
+   Those viewport units add up to 100vw, which ignores the scrollbar and any
+   inset, so the calls panel's right edge is clipped. */
+.members-home__row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  box-sizing: border-box;
+  width: min(100% - 2.5rem, calc(100vw - 2.5rem));
+  max-width: 100%;
+  margin-inline: auto;
+  min-width: 0;
+  align-items: stretch;
+  column-gap: 0;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--navy-700);
+  border-radius: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.members-home__row > .bulletin,
+.members-home__row > .call-stats {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+}
+
+/* The calls panel sizes the row. height: 0 keeps the post list from stretching
+   the page; min-height: 100% then matches the calls panel. */
+.members-home__row > .bulletin {
+  height: 0;
+  min-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bulletin {
+  background: #fff;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 1.25rem 1.35rem 0.5rem;
+}
+
+.bulletin .members-panel__head {
+  flex: 0 0 auto;
+  max-width: none;
+  margin-bottom: 0.5rem;
+}
+
+.bulletin__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  align-content: start;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.bulletin__post {
+  margin: 0;
+  padding: 1rem 0 0.25rem;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.bulletin__date {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+  color: var(--ink-faint);
+}
+
+.bulletin__tag {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-600);
+}
+
+.bulletin__post h2 {
+  font-size: clamp(1.45rem, 2.5vw, 1.8rem);
+  margin-bottom: 0.35rem;
+}
+
+.call-stats {
+  background: #fff;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 1.1rem 0.9rem 0.7rem;
+}
+
+.call-stats h2 {
+  font-size: clamp(1.35rem, 1.6vw, 1.7rem);
+  margin-bottom: 0.15rem;
+}
+
+.call-stats__label {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-600);
+}
+
+.call-stats__months {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.call-stats__month {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  gap: 0.4rem;
+  align-items: center;
+  margin: 0;
+  padding: 0.32rem 0;
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+
+.call-stats__name {
+  color: var(--navy-800);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.call-stats__track {
+  display: block;
+  height: 0.45rem;
+  background: var(--navy-050);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.call-stats__bar {
+  display: block;
+  height: 100%;
+  background: var(--navy-700);
+  border-radius: inherit;
+}
+
+.call-stats__count {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--navy-800);
+  min-width: 1.6rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.month-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.month-nav__label {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--navy-800);
+}
+
+.month-nav button {
+  border: 2px solid var(--navy-700);
+  background: #fff;
+  color: var(--navy-800);
+  border-radius: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+.month-nav button:hover {
+  background: var(--navy-050);
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.month-grid__dow {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: center;
+  padding-bottom: 0.25rem;
+}
+
+.month-grid__day {
+  min-width: 0;
+  min-height: 5.5rem;
+  padding: 0.4rem 0.45rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.month-grid__day--empty {
+  background: transparent;
+  border-color: transparent;
+}
+
+.month-grid__day--event {
+  background: var(--navy-800);
+  border-color: var(--navy-800);
+  color: #fff;
+}
+
+.month-grid__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.month-grid__event {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+}
+
+.month-grid__time {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-200);
+}
+
+.month-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.month-list li {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1.2fr) minmax(10rem, 1.4fr) auto;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  margin: 0;
+  padding: 0.9rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--navy-700);
+  border-radius: 0;
+}
+
+.month-list__when {
+  color: var(--ink-soft);
+}
+
+.month-list__what {
+  font-weight: 700;
+  color: var(--navy-800);
+}
+
+.month-list__time {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--navy-700);
+}
+
+.members-panel__empty + .member-table-scroll,
+.members-panel__empty + .member-filters {
+  margin-top: 1rem;
+}
+
+.member-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+  margin: 0 0 1rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.member-filters .field {
+  flex: 1 1 16rem;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+}
+
+.member-filters .field--list {
+  flex: 1 1 12rem;
+  max-width: 16rem;
+}
+
+.member-filters .field input,
+.member-filters .field select {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.member-table-scroll {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.member-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 46rem;
+}
+
+.member-table th,
+.member-table td {
+  padding: 0.75rem 0.9rem;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+}
+
+.member-table th {
+  background: var(--navy-800);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.member-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.member-table tbody tr:hover td {
+  background: var(--navy-050);
+}
+
+.member-status {
+  display: inline-block;
+  min-width: 5.6rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 0;
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.member-status--active {
+  background: #d3f0dc;
+  color: #10281c;
+}
+
+.member-status--inactive {
+  background: #f8d0d4;
+  color: #4a1218;
+}
+
+.session-list {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.bylaw-form,
+.session-card,
+.session-form {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--navy-700);
+  border-radius: 0;
+  box-shadow: var(--shadow-sm);
+  margin: 0;
+  padding: 1.15rem 1.3rem 1.25rem;
+}
+
+.session-form {
+  margin: 1.5rem auto 0;
+  max-width: min(40rem, 100%);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.bylaw-form {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-inline: auto;
+}
+
+.bylaw-document {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.75rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 0 1.15rem;
+  text-align: left;
+}
+
+.bylaw-document__start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.75rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bylaw-document__link,
+.bylaw-document__update {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--navy-700);
+  border-radius: 0;
+  background: #fff;
+  color: var(--navy-800);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.bylaw-document__corner {
+  margin-left: auto;
+}
+
+.bylaw-document__link:hover,
+.bylaw-document__link:focus,
+.bylaw-document__update:hover,
+.bylaw-document__update:focus {
+  background: var(--navy-050);
+  color: var(--navy-800);
+  text-decoration: none;
+}
+
+.bylaw-document__link:disabled,
+.bylaw-document__update:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.bylaw-document__file {
+  display: none;
+}
+
+.bylaw-document__notice {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--navy-800);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.session-card h2,
+.session-form h2 {
+  font-size: clamp(1.45rem, 2.5vw, 1.8rem);
+  margin-bottom: 0.4rem;
+}
+
+.session-card dl {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.session-card dl div {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 11rem) minmax(0, 1fr);
+  gap: 0.2rem 0.75rem;
+  min-width: 0;
+}
+
+.session-card dt,
+.session-card dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.session-card dt {
+  font-weight: 700;
+  color: var(--navy-800);
+}
+
+.session-card dd {
+  white-space: pre-wrap;
+}
+
+.members-bylaws .members-panel__empty,
+.members-form .members-panel__empty,
+.bylaw-form .members-panel__error,
+.session-form .members-panel__error {
+  margin: 0 0 1rem;
+  max-width: none;
+}
+
+.members-bylaws .members-panel__empty,
+.members-form .members-panel__empty {
+  margin-bottom: 0;
+}
+
+.members-area .field input,
+.members-area .field textarea,
+.members-area .field select,
+.members-area .btn {
+  border-radius: 0;
+}
+
+@media (max-width: 900px) {
+  .members-home__row {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(100% - 2.5rem, calc(100vw - 2.5rem));
+    max-width: 100%;
+    margin-inline: auto;
+    row-gap: 0;
+  }
+
+  /* Equal height is the desktop row only. On a narrow screen the bulletin
+     keeps its own ceiling so the calls list stays reachable underneath. */
+  .members-home__row > .bulletin {
+    height: auto;
+    min-height: 0;
+    max-height: min(26rem, 70vh);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bulletin__list {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .members-nav__inner {
+    gap: 0.35rem 0.5rem;
+    padding: 0.45rem 0 0.55rem;
+    min-width: 0;
+  }
+
+  .members-nav__who {
+    flex: 1 1 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .members-nav nav {
+    flex: 1 1 100%;
+  }
+
+  .members-nav ul {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .members-nav li {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .members-nav a,
+  .members-nav__signout,
+  .members-nav__forms-btn {
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+    padding: 0.4rem 0.55rem;
+    letter-spacing: 0.04em;
+  }
+
+  .members-nav__forms.is-open {
+    flex: 1 1 100%;
+  }
+
+  .members-nav .members-nav__menu {
+    position: static;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin-top: 0.2rem;
+  }
+
+  .session-card dl div {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .members-nav__signout {
+    margin-left: 0;
+  }
+
+  .members-panel h1,
+  .members-panel .lead,
+  .bylaw-form,
+  .bylaw-form label {
+    overflow-wrap: break-word;
+  }
+
+  .month-nav {
+    align-items: stretch;
+  }
+
+  .month-nav__label {
+    flex: 1 1 100%;
+    text-align: center;
+    font-size: 1.35rem;
+  }
+
+  .month-nav button {
+    flex: 1 1 8rem;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .month-grid {
+    gap: 0.2rem;
+  }
+
+  .month-grid__dow {
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    overflow-wrap: break-word;
+  }
+
+  .month-grid__day {
+    min-height: 3.4rem;
+    padding: 0.25rem;
+  }
+
+  .month-grid__event {
+    font-size: 0.68rem;
+  }
+
+  .month-list li {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .members-area .btn {
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .member-filters {
+    align-items: stretch;
+  }
+
+  .member-filters .field,
+  .member-filters .field--list {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+.members-bylaws,
+.members-bylaws .wrap {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bylaw-cite,
+.bylaw-vote {
+  display: block;
+  margin: 0 0 1.1rem;
+  padding: 1rem 1rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  width: 100%;
+  min-width: 0;
+  min-inline-size: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.bylaw-cite {
+  border-top: 3px solid var(--navy-700);
+  padding-bottom: 1rem;
+}
+
+.bylaw-cite > .field {
+  margin: 0.9rem 0 0;
+}
+
+.bylaw-meetings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.bylaw-vote {
+  text-align: center;
+}
+
+.bylaw-meetings {
+  width: 100%;
+  min-width: 0;
+  min-inline-size: 0;
+  max-width: 100%;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.bylaw-vote {
+  background: var(--navy-050);
+  border-color: #c5d2e2;
+}
+
+.bylaw-cite legend,
+.bylaw-vote legend {
+  display: block;
+  float: left;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 0.65rem;
+  padding: 0;
+  font-weight: 700;
+  color: var(--navy-800);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.bylaw-cite legend {
+  text-align: left;
+}
+
+.bylaw-cite > .bylaw-row,
+.bylaw-cite > .field,
+.bylaw-cite > .bylaw-paragraphs {
+  clear: both;
+}
+
+.bylaw-vote legend {
+  text-align: center;
+}
+
+.bylaw-vote__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  clear: both;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.bylaw-row {
+  display: grid;
+  gap: 0.75rem 1rem;
+  min-width: 0;
+}
+
+.bylaw-row--cite {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.bylaw-row--pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 1.1rem;
+}
+
+.bylaw-row > .field,
+.bylaw-form .field {
+  min-width: 0;
+}
+
+.bylaw-row > .field {
+  margin: 0;
+}
+
+.bylaw-paragraphs {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bylaw-paragraphs__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  line-height: inherit;
+  text-align: left;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid #b9c6d4;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.bylaw-paragraphs__trigger:focus {
+  border-color: var(--navy-600);
+  box-shadow: 0 0 0 3px rgba(42, 111, 196, 0.18);
+  outline: none;
+}
+
+.bylaw-paragraphs__summary {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+
+.bylaw-paragraphs__caret {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-right: 0.32rem solid transparent;
+  border-left: 0.32rem solid transparent;
+  border-top: 0.38rem solid var(--navy-700);
+}
+
+.bylaw-paragraphs.is-open .bylaw-paragraphs__caret {
+  transform: rotate(180deg);
+}
+
+.bylaw-paragraphs__list {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #b9c6d4;
+  border-radius: 0;
+  background: #fff;
+}
+
+.bylaw-paragraphs {
+  position: relative;
+}
+
+.bylaw-paragraphs__validity {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bylaw-paragraphs__options {
+  max-height: 24rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-width: 0;
+  padding-top: 0.2rem;
+  scroll-padding-top: 0.2rem;
+}
+
+.bylaw-paragraphs__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--ink);
+  cursor: pointer;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: normal;
+  overflow: visible;
+}
+
+.bylaw-paragraphs__item--all {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--navy-800);
+  background: #f4f7fb;
+  border-bottom: 1px solid #d5deea;
+}
+
+.bylaw-paragraphs__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  overflow-wrap: break-word;
+}
+
+.bylaw-paragraphs__done {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  border: 0;
+  border-top: 1px solid #d5deea;
+  border-radius: 0;
+  background: #f4f7fb;
+  color: var(--navy-800);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: center;
+  cursor: pointer;
+}
+
+.bylaw-paragraphs__done:hover,
+.bylaw-paragraphs__done:focus-visible {
+  background: #e7eef6;
+}
+
+.members-area .bylaw-form .bylaw-paragraphs__item input[type='checkbox'] {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.12rem 0 0;
+  padding: 0;
+  flex: 0 0 auto;
+  accent-color: var(--navy-700);
+  border-radius: 0;
+}
+
+.bylaw-form .field label,
+.bylaw-meetings .field label,
+.bylaw-vote .field label,
+.bylaw-choice {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.bylaw-form .field input,
+.bylaw-form .field select,
+.bylaw-form .field textarea,
+.bylaw-vote input {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.bylaw-vote__prompt {
+  margin: 0.35rem 0 0.45rem;
+  font-weight: 700;
+  color: var(--navy-800);
+}
+
+.bylaw-choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem 1.25rem;
+  margin: 0 0 0.9rem;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.bylaw-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-weight: 700;
+  color: var(--navy-800);
+  cursor: pointer;
+}
+
+.members-area .bylaw-choice input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  padding: 0;
+  flex: 0 0 auto;
+  accent-color: var(--navy-700);
+  border-radius: 50%;
+}
+
+.bylaw-meetings .field {
+  width: min(40rem, 100%);
+  max-width: 100%;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.bylaw-vote .field {
+  width: min(16rem, 100%);
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bylaw-form__thanks {
+  margin: 0 0 1.15rem;
+  padding: 0.95rem 0.85rem;
+  border: 1px solid var(--navy-700);
+  border-top: 4px solid var(--navy-700);
+  border-radius: 0;
+  background: var(--navy-050);
+  color: var(--navy-800);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.6vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.bylaw-form__status {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--navy-700);
+  border-radius: 0;
+  background: var(--navy-050);
+  color: var(--navy-800);
+  font-weight: 600;
+  text-align: center;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.bylaw-form__status--error {
+  background: var(--alert-050);
+  border-color: var(--alert-500);
+  color: var(--alert-700);
+}
+
+.bylaw-form__submit {
+  display: flex;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.bylaw-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.bylaw-form__actions .bylaw-form__submit {
+  margin-inline: 0;
+}
+
+.bylaw-form__delete,
+.bylaw-submission-card__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--alert-600);
+  border-radius: 0;
+  background: #fff;
+  color: var(--alert-700);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.bylaw-form__delete:hover,
+.bylaw-form__delete:focus-visible,
+.bylaw-submission-card__delete:hover,
+.bylaw-submission-card__delete:focus-visible {
+  background: var(--alert-050);
+}
+
+.bylaw-form__delete:disabled,
+.bylaw-submission-card__delete:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+@media (max-width: 720px) {
+  .bylaw-row--pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.members-bylaw-submissions,
+.members-bylaw-submissions .wrap {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.members-bylaw-submissions {
+  overflow-x: hidden;
+}
+
+.bylaw-submissions__back {
+  margin: -0.75rem 0 1.15rem;
+}
+
+.bylaw-submissions__back a {
+  font-weight: 700;
+}
+
+.bylaw-submission-list {
+  --bylaw-card-gap: 0.75rem;
+  --bylaw-card-size: 20rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--bylaw-card-size)), var(--bylaw-card-size)));
+  justify-content: center;
+  gap: var(--bylaw-card-gap);
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  min-width: 0;
+  width: min(100%, calc(3 * var(--bylaw-card-size) + 2 * var(--bylaw-card-gap)));
+  max-width: 100%;
+}
+
+.bylaw-submission-list > li {
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bylaw-submission-card {
+  min-width: 0;
+  max-width: 100%;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--navy-800);
+  border-radius: 0;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.bylaw-submission-card__open {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.bylaw-submission-card__open:hover,
+.bylaw-submission-card__open:focus-visible {
+  text-decoration: none;
+}
+
+.bylaw-submission-card__open:hover .bylaw-submission-card__body,
+.bylaw-submission-card__open:focus-visible .bylaw-submission-card__body {
+  background: var(--navy-050);
+}
+
+.bylaw-submission-card__open:focus-visible {
+  outline: 2px solid var(--navy-600);
+  outline-offset: -2px;
+}
+
+.bylaw-submission-card__who {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--navy-800);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.bylaw-submission-card__body {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.65rem 0.75rem 0.75rem;
+  text-align: center;
+}
+
+.bylaw-submission-card__meta,
+.bylaw-submission-card__cite,
+.bylaw-submission-card__snippet {
+  margin: 0;
+  min-width: 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.bylaw-submission-card__meta,
+.bylaw-submission-card__cite {
+  color: var(--navy-800);
+  font-weight: 700;
+}
+
+.bylaw-submission-card__snippet {
+  color: var(--ink);
+}
+
+.bylaw-submission-card__snippet span {
+  font-weight: 700;
+  color: var(--navy-800);
+}
+
+.bylaw-submission-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0 0.75rem 0.75rem;
+}
+
+@media (max-width: 390px) {
+  .bylaw-document__start,
+  .bylaw-document__corner {
+    max-width: 100%;
+  }
+
+  .bylaw-row--cite,
+  .bylaw-row--pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bylaw-form {
+    padding: 1rem 0.85rem 1.05rem;
+  }
+
+  .bylaw-cite,
+  .bylaw-vote {
+    padding: 0.85rem 0.75rem 0.95rem;
+  }
+
+  .bylaw-vote .field {
+    width: 100%;
+    max-width: 100%;
+  }
+}

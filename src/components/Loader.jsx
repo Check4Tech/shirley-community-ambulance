@@ -11,10 +11,14 @@ import './loader.css'
  * assistive tech. Users with prefers-reduced-motion get a static shield with a
  * gentle opacity pulse instead of a spin (see loader.css).
  */
-export default function Loader({ label = 'Loading…', fullscreen = true }) {
+export default function Loader({ label = 'Loading…', fullscreen = true, compact = false }) {
+  const classes = ['loader']
+  if (compact) classes.push('loader--compact')
+  else if (fullscreen) classes.push('loader--fullscreen')
+
   return (
     <div
-      className={fullscreen ? 'loader loader--fullscreen' : 'loader'}
+      className={classes.join(' ')}
       role="status"
       aria-live="polite"
     >

@@ -263,6 +263,11 @@ export function Field({
   autoCapitalize,
   spellCheck,
   disabled,
+  readOnly,
+  tabIndex,
+  min,
+  step,
+  inputMode,
 }) {
   const id = `f-${name}`
   const common = {
@@ -270,12 +275,17 @@ export function Field({
     name,
     required,
     disabled,
+    ...(readOnly ? { readOnly: true } : null),
+    ...(tabIndex != null ? { tabIndex } : null),
     'aria-describedby': help ? `${id}-help` : undefined,
     ...(value !== undefined ? { value } : null),
     ...(onChange ? { onChange } : null),
     ...(autoComplete ? { autoComplete } : null),
     ...(autoCapitalize ? { autoCapitalize } : null),
     ...(spellCheck !== undefined ? { spellCheck } : null),
+    ...(min != null ? { min } : null),
+    ...(step != null ? { step } : null),
+    ...(inputMode ? { inputMode } : null),
   }
 
   return (

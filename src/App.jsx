@@ -15,6 +15,14 @@ const Support = lazy(() => import('./pages/Support'))
 const Fundraiser = lazy(() => import('./pages/Fundraiser'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Members = lazy(() => import('./pages/Members'))
+const MembersLayout = lazy(() => import('./pages/members/MembersLayout'))
+const MembersHome = lazy(() => import('./pages/members/MembersHome'))
+const MembersCalendar = lazy(() => import('./pages/members/MembersCalendar'))
+const MembersRoster = lazy(() => import('./pages/members/MembersRoster'))
+const MembersBylaws = lazy(() => import('./pages/members/MembersBylaws'))
+const MembersBylawSubmissions = lazy(() => import('./pages/members/MembersBylawSubmissions'))
+const MembersSessionForm = lazy(() => import('./pages/members/MembersSessionForm'))
+const RequireMember = lazy(() => import('./pages/members/RequireMember'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 // Old GoDaddy paths -> their new location. The student program page used to
@@ -83,6 +91,27 @@ export default function App() {
           <Route path="/fundraiser" element={<Fundraiser />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/members" element={<Members />} />
+          <Route
+            element={
+              <RequireMember>
+                <MembersLayout />
+              </RequireMember>
+            }
+          >
+            <Route path="/members/home" element={<MembersHome />} />
+            <Route path="/members/calendar" element={<MembersCalendar />} />
+            <Route path="/members/roster" element={<MembersRoster />} />
+            <Route path="/members/students" element={<MembersRoster group="students" />} />
+            <Route path="/members/probationary" element={<MembersRoster group="probationary" />} />
+            <Route path="/members/forms/bylaw" element={<MembersBylaws />} />
+            <Route path="/members/forms/bylaw/submissions" element={<MembersBylawSubmissions />} />
+            <Route path="/members/forms/bylaw/:id" element={<MembersBylaws />} />
+            <Route path="/members/forms/uniform" element={<MembersSessionForm kind="uniform" />} />
+            <Route path="/members/forms/reimbursement" element={<MembersSessionForm kind="reimbursement" />} />
+            <Route path="/members/forms/bls-preceptor" element={<MembersSessionForm kind="bls" />} />
+            <Route path="/members/forms/als-preceptor" element={<MembersSessionForm kind="als" />} />
+            <Route path="/members/bylaws" element={<Navigate to="/members/forms/bylaw" replace />} />
+          </Route>
           {/* The old GoDaddy URLs redirect to their new home so that existing
               links, bookmarks, and search results keep working. */}
           {Object.entries(LEGACY_URLS).map(([from, to]) => (
