@@ -14,6 +14,8 @@ export const RECURRENCE_LABELS = {
   BIWEEKLY: 'Every two weeks',
   MONTHLY: 'Monthly',
   ANNUALLY: 'Annually',
+  MONTHLY_NTH_WEEKDAY: 'Monthly weekday',
+  ANNUAL_NTH_WEEKDAY: 'Annual weekday',
 }
 
 const INTERVAL_DAYS = {
@@ -160,9 +162,14 @@ function formatWhen(year, month, day) {
   }).format(new Date(year, month - 1, day))
 }
 
+function isoDate(date) {
+  return `${String(date.year).padStart(4, '0')}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`
+}
+
 function toOccurrence(series, date, time) {
   return {
     seriesId: series.id,
+    sourceDate: isoDate(date),
     title: series.title,
     year: date.year,
     month: date.month,
@@ -270,6 +277,10 @@ function expandNthWeekday(series, window, anchor, time, everyMonth) {
 }
 
 export function expandSeries(series, window) {
+  return applyExceptions(series, expandRule(series, window), window)
+}
+
+function expandRule(series, window) {
   const time = parseEventTime(series.eventTime)
   const anchorDate = parseIsoDate(series.eventDate)
   const anchor = anchorDate ? { ...anchorDate, hour: time.hour, minute: time.minute } : null
@@ -301,6 +312,101 @@ export function expandSeries(series, window) {
   return []
 }
 
+function normalizeIsoDate(value) {
+  if (Array.isArray(value) && value.length >= 3) {
+    const year = Number(value[0])
+    const month = Number(value[1])
+    const day = Number(value[2])
+    if (!year || !month || !day) return ''
+    return isoDate({ year, month, day })
+  }
+  const match = /^(\d{4}-\d{2}-\d{2})/.exec(String(value ?? '').trim())
+  return match ? match[1] : ''
+}
+
+function exceptionMaps(series) {
+  const skipped = new Set()
+  const overrides = new Map()
+  const list = Array.isArray(series?.exceptions) ? series.exceptions : []
+  list.forEach((item) => {
+    const date = normalizeIsoDate(item?.date)
+    if (!date) return
+    if (item.action === 'SKIP') {
+      skipped.add(date)
+      overrides.delete(date)
+      return
+    }
+    if (item.action === 'OVERRIDE' && !skipped.has(date)) overrides.set(date, item)
+  })
+  return { skipped, overrides }
+}
+
+/** True when the series rule produces this date, on or after the anchor. */
+function occursOn(series, iso) {
+  const date = parseIsoDate(iso)
+  const anchor = parseIsoDate(series?.eventDate)
+  if (!date || !anchor || daysBetween(anchor, date) < 0) return false
+  const recurrence = series.recurrence
+  if (recurrence === 'DAILY') return true
+  if (recurrence === 'WEEKLY') return daysBetween(anchor, date) % 7 === 0
+  if (recurrence === 'BIWEEKLY') return daysBetween(anchor, date) % 14 === 0
+  if (recurrence === 'MONTHLY') return date.day === anchor.day
+  if (recurrence === 'ANNUALLY') return date.month === anchor.month && date.day === anchor.day
+  if (recurrence === 'MONTHLY_NTH_WEEKDAY' || recurrence === 'ANNUAL_NTH_WEEKDAY') {
+    if (recurrence === 'ANNUAL_NTH_WEEKDAY' && date.month !== Number(series.monthOfYear)) return false
+    const weekday = isoWeekdayToJs(series.dayOfWeek)
+    const week = Number(series.weekOfMonth) || 0
+    if (week < 1) return false
+    const day = nthWeekdayOfMonth(date.year, date.month - 1, week, weekday)
+    return day === date.day && day <= daysInMonth(date.year, date.month)
+  }
+  return false
+}
+
+function overrideOccurrence(series, sourceDate, override) {
+  const shown = parseIsoDate(override?.eventDate) || parseIsoDate(sourceDate)
+  if (!shown) return null
+  const time = override?.eventTime != null && override.eventTime !== ''
+    ? parseEventTime(override.eventTime)
+    : parseEventTime(series.eventTime)
+  const title = typeof override?.title === 'string' && override.title.trim()
+    ? override.title.trim()
+    : series.title
+  const occurrence = toOccurrence({ ...series, title }, shown, time)
+  occurrence.sourceDate = sourceDate
+  return occurrence
+}
+
+/**
+ * SKIP hides that generated date. OVERRIDE shows the stored name, date, and time
+ * instead, including when the replacement date is the one on screen and the
+ * generated date is not.
+ */
+function applyExceptions(series, items, window) {
+  const { skipped, overrides } = exceptionMaps(series)
+  if (skipped.size === 0 && overrides.size === 0) return items
+  const seen = new Set()
+  const result = []
+  items.forEach((item) => {
+    const source = item.sourceDate
+    seen.add(source)
+    if (skipped.has(source)) return
+    const override = overrides.get(source)
+    if (!override) {
+      result.push(item)
+      return
+    }
+    const replaced = overrideOccurrence(series, source, override)
+    if (replaced && inWindow(replaced, window, null)) result.push(replaced)
+  })
+  overrides.forEach((override, source) => {
+    if (seen.has(source) || skipped.has(source) || !occursOn(series, source)) return
+    const replaced = overrideOccurrence(series, source, override)
+    if (replaced && inWindow(replaced, window, null)) result.push(replaced)
+  })
+  return result
+}
+
 export function expandAll(seriesList, now = new Date(), window = visibleWindow(now)) {
   if (stamp(window.start) > stamp(window.end)) return []
   const items = seriesList.flatMap((series) => expandSeries(series, window))
@@ -319,6 +425,7 @@ export function seriesFromApi(row) {
     monthOfYear: row.monthOfYear,
     weekOfMonth: row.weekOfMonth,
     dayOfWeek: row.dayOfWeek,
+    exceptions: Array.isArray(row.exceptions) ? row.exceptions : [],
   }
 }
 

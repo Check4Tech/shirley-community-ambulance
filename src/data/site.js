@@ -99,6 +99,10 @@ export const capabilities = [
   },
 ]
 
+/**
+ * Previous public board. Shown until GET /api/board returns seats, and used to route forms.
+ * Chief of Operations is the Chief seat.
+ */
 export const directors = [
   {
     name: 'Marc Lampert',

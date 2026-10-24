@@ -68,6 +68,22 @@
     margin-inline: auto;
   }
 
+  .board:not(:has(.board__node)) {
+    height: auto;
+  }
+
+  .board:not(:has(.board__node)) .board__ring {
+    display: none;
+  }
+
+  .board:not(:has(.board__node)) .board__shield {
+    position: static;
+    display: block;
+    width: 150px;
+    margin: 0.5rem auto 0;
+    transform: none;
+  }
+
   /* Faint guide circle passing through the five card centres. */
   .board__ring {
     display: block;
@@ -101,7 +117,7 @@
   /* Regular pentagon vertices, remapped from clockwise seniority.
      Angles are from 12 o'clock: 0° top, 72° UR, 144° LR, 216° LL, 288° UL. */
   .board__node--1 {
-    /* Chief of Operations — 0° top centre */
+    /* Chief — 0° top centre */
     left: 50%;
     top: 11%;
   }

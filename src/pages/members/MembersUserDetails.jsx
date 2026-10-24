@@ -5,6 +5,7 @@ import { readSession } from '../../auth/session'
 import { authorizedFetch } from './memberApi'
 import { MEMBER_STATUSES, memberStatusLabel, memberStatusLocksOut, memberStatusValue } from './memberStatus'
 import MembersUserPermissions from './MembersUserPermissions'
+import { BOARD_POSITIONS } from '../../data/boardPositions'
 import { CERTIFICATION_OPTIONS, COUNTRIES, LANGUAGES, LICENSE_TYPES, STATES } from './userDetailsOptions'
 import { readUserDetailsId, writeUserDetailsId } from './userDetailsSelection'
 import './user-details.css'
@@ -118,6 +119,7 @@ function draftFrom(data) {
     licenseType: rest.licenseType || '',
     state: rest.state || '',
     citizenship: rest.citizenship || '',
+    boardPosition: typeof rest.boardPosition === 'string' ? rest.boardPosition : '',
   }
 }
 
@@ -381,6 +383,7 @@ function payloadOf(user) {
     isPaid: Boolean(user.isPaid),
     drugTest: String(user.drugTest || '').trim() ? user.drugTest : null,
     drugTestDate: user.drugTestDate || null,
+    boardPosition: String(user.boardPosition || '').trim() || null,
     certificates,
   }
 }
@@ -842,6 +845,24 @@ function UserDetailsScreen() {
                         <label htmlFor="fitTesting">
                           Fit Testing:
                           <input id="fitTesting" className={`${inputClass} ${fitClass(user.fitTesting)}`} type="date" name="fitTesting" value={user.fitTesting || ''} readOnly={!editing} onChange={onField} />
+                        </label>
+                        <label htmlFor="boardPosition">
+                          Position:
+                          <select
+                            id="boardPosition"
+                            className={inputClass}
+                            name="boardPosition"
+                            value={user.boardPosition || ''}
+                            disabled={!editing}
+                            onChange={onField}
+                          >
+                            <option value="">No board seat</option>
+                            {BOARD_POSITIONS.map((position) => (
+                              <option key={position} value={position}>
+                                {position}
+                              </option>
+                            ))}
+                          </select>
                         </label>
                         <label htmlFor="role">
                           Role:

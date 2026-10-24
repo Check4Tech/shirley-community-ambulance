@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
   aboutCopy,
   capabilities,
@@ -8,10 +9,63 @@ import {
   org,
   partners,
 } from '../data/site'
+import { BOARD_POSITIONS, boardSeatsFrom } from '../data/boardPositions'
+import { apiBaseUrl } from '../auth/session'
 import { CtaBand, Gallery, PageHero, PersonCard, StatBand } from '../components/UI'
 import './about.css'
 
+function seatOf(role) {
+  if (role === 'Chief of Operations') return 'Chief'
+  return BOARD_POSITIONS.includes(role) ? role : ''
+}
+
+function personName(name) {
+  if (typeof name !== 'string' || name !== name.toUpperCase()) return name
+  return name.toLowerCase().replace(/(^|[\s-])\p{L}/gu, (letter) => letter.toUpperCase())
+}
+
+const previousBoard = directors.map((director) => ({
+  key: director.email,
+  name: director.name,
+  cert: director.cert,
+  role: director.role,
+  ext: director.ext,
+  email: director.email,
+  seat: seatOf(director.role),
+}))
+
 export default function About() {
+  const [board, setBoard] = useState(previousBoard)
+  const [fromApi, setFromApi] = useState(false)
+
+  useEffect(() => {
+    const base = apiBaseUrl()
+    if (!base) return undefined
+    let cancelled = false
+    fetch(`${base}/board`, { headers: { Accept: 'application/json' } })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        if (cancelled || payload == null) return
+        const seats = boardSeatsFrom(payload).map((seat) => ({
+          key: seat.position,
+          name: personName(seat.fullName),
+          role: seat.position,
+          seat: seat.position,
+        }))
+        setBoard(seats)
+        setFromApi(true)
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setBoard(previousBoard)
+          setFromApi(false)
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   return (
     <>
       <PageHero
@@ -88,8 +142,17 @@ export default function About() {
             <span className="eyebrow">Leadership</span>
             <h2>{new Date().getFullYear()} Board of Directors</h2>
             <p className="lead">
-              Reach any officer directly on the main line at{' '}
-              <a href={org.phoneHref}>{org.phone}</a> using their extension.
+              {fromApi ? (
+                <>
+                  The officers currently holding these seats. Reach the agency on the main line at{' '}
+                  <a href={org.phoneHref}>{org.phone}</a>.
+                </>
+              ) : (
+                <>
+                  Reach any officer directly on the main line at{' '}
+                  <a href={org.phoneHref}>{org.phone}</a> using their extension.
+                </>
+              )}
             </p>
           </div>
           {/* DOM order is seniority order; the pentagon placement is purely
@@ -97,11 +160,23 @@ export default function About() {
           <div className="board">
             <span className="board__ring" aria-hidden="true" />
             <img className="board__shield" src="/images/shield.png" alt="" aria-hidden="true" />
-            {directors.map((d, i) => (
-              <div key={d.email} className={`board__node board__node--${i + 1}`}>
-                <PersonCard {...d} />
-              </div>
-            ))}
+            {board.map((person, index) => {
+              const seat = BOARD_POSITIONS.indexOf(person.seat)
+              return (
+                <div
+                  key={person.key}
+                  className={`board__node board__node--${seat >= 0 ? seat + 1 : index + 1}`}
+                >
+                  <PersonCard
+                    name={person.name}
+                    cert={person.cert}
+                    role={person.role}
+                    ext={person.ext}
+                    email={person.email}
+                  />
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
