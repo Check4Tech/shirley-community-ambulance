@@ -1,9 +1,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { logoutMember, readSession } from '../../auth/session'
+import { logoutMember, readSession, rigCheckHandoffUrl } from '../../auth/session'
 import './members-area.css'
-
-const RIG_CHECKS_URL = 'https://check4tech.net/shirley/user-portal'
 
 const TABS = [
   { to: '/members/home', label: 'Home', end: true },
@@ -177,7 +175,9 @@ function FormsMenu() {
 
 export default function MembersLayout() {
   const navigate = useNavigate()
+  const location = useLocation()
   const session = readSession()
+  const rigChecksHref = session ? rigCheckHandoffUrl(session) : null
 
   async function signOut() {
     await logoutMember(session)
@@ -195,14 +195,23 @@ export default function MembersLayout() {
             <ul>
               {TABS.map((tab) => (
                 <li key={tab.to}>
-                  <NavLink to={tab.to} end={tab.end}>
+                  <NavLink
+                    to={tab.to}
+                    end={tab.end}
+                    className={({ isActive }) =>
+                      isActive ||
+                      (tab.to === '/members/roster' && location.pathname.startsWith('/members/user-details'))
+                        ? 'active'
+                        : undefined
+                    }
+                  >
                     {tab.label}
                   </NavLink>
                 </li>
               ))}
               <FormsMenu />
               <li>
-                <a href={RIG_CHECKS_URL}>Rig Checks</a>
+                {rigChecksHref ? <a href={rigChecksHref}>Rig Checks</a> : null}
               </li>
             </ul>
           </nav>

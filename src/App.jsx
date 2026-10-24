@@ -19,6 +19,7 @@ const MembersLayout = lazy(() => import('./pages/members/MembersLayout'))
 const MembersHome = lazy(() => import('./pages/members/MembersHome'))
 const MembersCalendar = lazy(() => import('./pages/members/MembersCalendar'))
 const MembersRoster = lazy(() => import('./pages/members/MembersRoster'))
+const MembersUserDetails = lazy(() => import('./pages/members/MembersUserDetails'))
 const MembersBylaws = lazy(() => import('./pages/members/MembersBylaws'))
 const MembersBylawSubmissions = lazy(() => import('./pages/members/MembersBylawSubmissions'))
 const MembersSessionForm = lazy(() => import('./pages/members/MembersSessionForm'))
@@ -101,6 +102,8 @@ export default function App() {
             <Route path="/members/home" element={<MembersHome />} />
             <Route path="/members/calendar" element={<MembersCalendar />} />
             <Route path="/members/roster" element={<MembersRoster />} />
+            <Route path="/members/user-details" element={<MembersUserDetails />} />
+            <Route path="/members/user-details/:userId" element={<MembersUserDetails />} />
             <Route path="/members/students" element={<MembersRoster group="students" />} />
             <Route path="/members/probationary" element={<MembersRoster group="probationary" />} />
             <Route path="/members/forms/bylaw" element={<MembersBylaws />} />

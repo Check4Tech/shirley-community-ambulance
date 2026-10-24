@@ -2,10 +2,12 @@ export const SESSION_KEY = 'sca-member-session'
 
 /**
  * Check4Tech page where a member picks a rig check and opens the completion form.
- * The form itself is `/shirley/selected-rig-check` (ShirleySelectedRigCheck).
- * That form needs a rig check already chosen, so the members tab opens the portal.
+ * That page is `/shirley/complete-checks` (ShirleyUserPortal).
+ * `/shirley/user-portal` still renders the same screen, then sends board members
+ * (including a normal user) to the org dashboard, so it is not the rig-check page.
+ * The form itself is `/shirley/selected-rig-check` and needs a rig check already chosen.
  */
-export const RIG_CHECK_ENTRY_PATH = '/shirley/user-portal'
+export const RIG_CHECK_ENTRY_PATH = '/shirley/complete-checks'
 export const RIG_CHECK_COMPLETION_PATH = '/shirley/selected-rig-check'
 
 // Production sets VITE_APP_SHIRLEY_API_URL to the Shirley Check4Tech API,
@@ -61,7 +63,8 @@ export function check4techClientOrigin() {
   if (typeof configured === 'string' && configured.trim()) {
     return configured.trim().replace(/\/$/, '')
   }
-  return 'http://127.0.0.1:5173'
+  if (import.meta.env.DEV) return 'http://127.0.0.1:5173'
+  return 'https://check4tech.net'
 }
 
 /**

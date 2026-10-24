@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { org } from '../data/site'
 import { Field } from '../components/UI'
 import { apiBaseUrl, readSession, writeSession } from '../auth/session'
+import { signInLockoutMessage } from './members/memberStatus'
 import './members.css'
 
 const eyeIcon = {
@@ -171,14 +172,14 @@ export default function Members() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          let inactive = false
+          let lockout = ''
           try {
             const body = await response.json()
-            inactive = typeof body?.message === 'string' && /inactive/i.test(body.message)
+            lockout = signInLockoutMessage(body?.message)
           } catch {
-            inactive = false
+            lockout = ''
           }
-          setError(inactive ? 'This account is inactive.' : 'Incorrect username or password.')
+          setError(lockout || 'Incorrect username or password.')
         } else {
           setError(`Something went wrong (${response.status}). Please try again.`)
         }

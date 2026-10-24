@@ -299,15 +299,22 @@ export function Field({
         )}
       </label>
       {options ? (
-        <select {...common} defaultValue="">
-          <option value="" disabled>
-            Choose one…
-          </option>
-          {options.map((o) => (
-            <option key={o} value={o}>
-              {o}
+        <select {...common} {...(value === undefined ? { defaultValue: '' } : null)}>
+          {value === undefined && (
+            <option value="" disabled>
+              Choose one…
             </option>
-          ))}
+          )}
+          {options.map((option) => {
+            const choice = option && typeof option === 'object'
+              ? { value: String(option.value ?? ''), label: option.label ?? option.value ?? '' }
+              : { value: String(option), label: String(option) }
+            return (
+              <option key={choice.value} value={choice.value}>
+                {choice.label}
+              </option>
+            )
+          })}
         </select>
       ) : rows ? (
         <textarea {...common} rows={rows} />

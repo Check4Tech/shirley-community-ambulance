@@ -1,0 +1,15 @@
+.member-table tbody tr.member-row {
+  cursor: pointer;
+}
+
+.member-row__link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+.member-row__link:hover,
+.member-row__link:focus-visible {
+  color: var(--navy-800);
+}

@@ -369,20 +369,53 @@
 }
 
 .month-nav {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.65rem 0.85rem;
+  width: 100%;
   margin-bottom: 1rem;
 }
 
-.month-nav__label {
+.month-nav__current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem 0.85rem;
+  min-width: 0;
+  max-width: 100%;
+  container-type: inline-size;
+}
+
+.month-nav__month {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--navy-800);
+  white-space: nowrap;
+}
+
+.month-nav__year {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  margin: 0;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.month-nav__year label {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--navy-800);
 }
@@ -401,8 +434,69 @@
   cursor: pointer;
 }
 
-.month-nav button:hover {
+.month-nav button:hover,
+.month-nav button:focus-visible {
   background: var(--navy-050);
+}
+
+.month-nav__year button {
+  padding: 0.28rem 0.5rem;
+  min-width: 2.1rem;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 1.25rem;
+}
+
+.month-nav__year input {
+  width: 4.75rem;
+  box-sizing: border-box;
+  border: 2px solid var(--navy-700);
+  border-radius: 0;
+  background: #fff;
+  color: var(--navy-800);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  padding: 0.28rem 0.25rem;
+}
+
+.month-nav__year input:focus {
+  border-color: var(--navy-800);
+  outline: 2px solid var(--navy-800);
+  outline-offset: 1px;
+}
+
+.month-nav__prev {
+  justify-self: start;
+}
+
+.month-nav__next {
+  justify-self: end;
+}
+
+/* When the month name and year sit in a tight gap, keep the year
+   control inside that gap so its arrows do not meet the month buttons. */
+@container (max-width: 16rem) {
+  .month-nav__year {
+    gap: 0.15rem 0.2rem;
+  }
+
+  .month-nav__year label {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+
+  .month-nav__year button {
+    min-width: 1.75rem;
+    padding: 0.22rem 0.35rem;
+  }
+
+  .month-nav__year input {
+    width: 3.4rem;
+  }
 }
 
 .month-grid {
@@ -505,6 +599,188 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--navy-700);
+}
+
+.calendar-create {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem 1rem;
+  align-items: end;
+  margin: 0 0 1.5rem;
+  max-width: 100%;
+}
+
+.calendar-create .field {
+  margin: 0;
+  min-width: 0;
+}
+
+.calendar-create__submit,
+.calendar-create__actions {
+  margin: 0;
+}
+
+.calendar-create__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.calendar-create-toggle {
+  margin: 0 0 1rem;
+}
+
+.calendar-notes {
+  margin: 0 0 1.15rem;
+  max-width: 68ch;
+  padding: 0.15rem 0 0.15rem 0.85rem;
+  border: 0;
+  border-left: 3px solid var(--navy-700);
+  border-radius: 0;
+  background: transparent;
+  color: var(--navy-800);
+  line-height: 1.5;
+}
+
+.members-calendar .members-panel__head {
+  margin-bottom: 1rem;
+}
+
+.calendar-create__help,
+.calendar-create__notice {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.members-calendar .calendar-create__notice {
+  margin: 0 0 1rem;
+}
+
+.calendar-create__notice {
+  font-weight: 700;
+}
+
+.calendar-create__notice--ok {
+  color: var(--navy-800);
+}
+
+.calendar-create__notice--err {
+  color: var(--alert-700);
+}
+
+.calendar-layout {
+  display: block;
+  min-width: 0;
+}
+
+button.month-grid__day {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+
+button.month-grid__day--event {
+  color: #fff;
+}
+
+.calendar-upcoming {
+  min-width: 0;
+}
+
+.calendar-upcoming h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.35rem;
+}
+
+.calendar-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(7, 26, 51, 0.72);
+}
+
+.calendar-modal__panel {
+  width: min(100%, 24rem);
+  max-height: min(80vh, 32rem);
+  overflow: auto;
+  background: #fff;
+  border: 3px solid var(--navy-800);
+  padding: 1.1rem 1.15rem 1.25rem;
+}
+
+.calendar-modal__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.calendar-modal__head h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.calendar-modal__close {
+  border: 2px solid var(--navy-700);
+  background: #fff;
+  color: var(--navy-800);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+
+.calendar-modal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.calendar-modal__list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  background: var(--surface-alt, #f4f7fb);
+  border-left: 4px solid var(--navy-700);
+}
+
+.calendar-modal .members-panel__empty {
+  margin: 0;
+}
+
+@media (min-width: 721px) {
+  .calendar-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .calendar-upcoming {
+    max-height: min(70vh, 42rem);
+    overflow-y: auto;
+    padding-right: 0.15rem;
+  }
+
+  .calendar-upcoming .month-list li {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
 }
 
 .members-panel__empty + .member-table-scroll,
@@ -865,19 +1141,41 @@
   }
 
   .month-nav {
-    align-items: stretch;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.4rem 0.55rem;
   }
 
-  .month-nav__label {
-    flex: 1 1 100%;
-    text-align: center;
-    font-size: 1.35rem;
-  }
-
-  .month-nav button {
-    flex: 1 1 8rem;
+  .month-nav__current {
+    flex: 0 1 auto;
+    order: 0;
+    width: auto;
     max-width: 100%;
+  }
+
+  .month-nav__month {
+    font-size: 1.15rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .month-nav > button {
+    flex: 0 0 auto;
+    max-width: 8.5rem;
     box-sizing: border-box;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.15;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .month-nav__prev {
+    justify-self: start;
+  }
+
+  .month-nav__next {
+    justify-self: end;
   }
 
   .month-grid {

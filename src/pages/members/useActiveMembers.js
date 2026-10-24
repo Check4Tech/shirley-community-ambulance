@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { apiBaseUrl, readSession, writeSession } from '../../auth/session'
+import { memberStatusLabel } from './memberStatus'
 
 const MIN_SPINNER_MS = 700
 
@@ -43,10 +44,7 @@ export function isProbationary(member) {
 }
 
 function memberStatus(member) {
-  const value = member?.isActive ?? member?.active
-  if (value === true || value === 'true') return 'Active'
-  if (value === false || value === 'false') return 'Inactive'
-  return ''
+  return memberStatusLabel(member)
 }
 
 function mapMembers(data, { sortByName }) {

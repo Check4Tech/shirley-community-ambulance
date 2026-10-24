@@ -1,6 +1,10 @@
 import { useEffect, useId, useMemo, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Loader from '../../components/Loader'
+import { memberStatusByValue } from './memberStatus'
+import { writeUserDetailsId } from './userDetailsSelection'
 import { isProbationary, isStudent, MEMBER_LIST_FILTERS, useActiveMembers } from './useActiveMembers'
+import './member-roster.css'
 
 function cell(value) {
   if (value == null || String(value).trim() === '') return '—'
@@ -9,12 +13,15 @@ function cell(value) {
 
 function StatusCell({ value }) {
   const text = cell(value)
-  if (text !== 'Active' && text !== 'Inactive') return text
-  const tone = text === 'Active' ? 'active' : 'inactive'
-  return <span className={`member-status member-status--${tone}`}>{text}</span>
+  const known = memberStatusByValue(text)
+  if (!known) return text
+  const tone = known.locksOut ? 'inactive' : 'active'
+  return <span className={`member-status member-status--${tone}`}>{known.label}</span>
 }
 
 export default function MembersRoster({ group = 'all' }) {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [nameQuery, setNameQuery] = useState('')
   const [appliedName, setAppliedName] = useState('')
   const [list, setList] = useState('all')
@@ -123,8 +130,30 @@ export default function MembersRoster({ group = 'all' }) {
               </thead>
               <tbody>
                 {rows.map((member) => (
-                  <tr key={member.id ?? member.username}>
-                    <td>{cell(member.name)}</td>
+                  <tr
+                    key={member.id ?? member.username}
+                    className={member.id != null ? 'member-row' : undefined}
+                    onClick={(event) => {
+                      const element = event.target instanceof Element ? event.target : event.target?.parentElement
+                      if (member.id == null || element?.closest('a')) return
+                      writeUserDetailsId(member.id)
+                      navigate('/members/user-details', { state: { from: location.pathname } })
+                    }}
+                  >
+                    <td>
+                      {member.id != null ? (
+                        <Link
+                          className="member-row__link"
+                          to="/members/user-details"
+                          state={{ from: location.pathname }}
+                          onClick={() => writeUserDetailsId(member.id)}
+                        >
+                          {cell(member.name)}
+                        </Link>
+                      ) : (
+                        cell(member.name)
+                      )}
+                    </td>
                     <td>{cell(member.username)}</td>
                     <td>{cell(member.role)}</td>
                     <td>{cell(member.certification)}</td>

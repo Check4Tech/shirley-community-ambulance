@@ -14,7 +14,7 @@ const PLACEHOLDER_POSTS = [
     id: 'meetings',
     title: 'Monthly meetings',
     date: 'October 1, 2026',
-    body: 'Placeholder post. Board meeting is the first Thursday, general meeting the second Thursday, and training the fourth Thursday. All three are at 1930. There is no third-Thursday meeting.',
+    body: 'Placeholder post. Board meeting is the first Thursday, general meeting the second Thursday, and training the fourth Thursday. All three are at 1930.'
   },
   {
     id: 'rigs',
