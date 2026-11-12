@@ -6,6 +6,7 @@ import { Field } from '../../components/UI'
 import { bylaws } from '../../data/bylaws'
 import { shirleyCalendarDate } from '../../data/site'
 import { useBylawsAccess } from './bylawAccess'
+import { toIsoDate } from './memberDates'
 
 const SEEDED_BYLAWS = '/documents/bylaws.pdf'
 const BYLAW_THANKS_KEY = 'sca-bylaw-proposal-thanks'
@@ -427,9 +428,7 @@ function emptyToNull(value) {
 }
 
 function dateInput(value) {
-  const text = value == null ? '' : String(value).trim()
-  const match = /^(\d{4}-\d{2}-\d{2})/.exec(text)
-  return match ? match[1] : ''
+  return toIsoDate(value) || ''
 }
 
 function valuesFromAmendment(row) {

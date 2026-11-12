@@ -78,6 +78,11 @@ export const PAGE_SEO = {
     description: 'Student and youth members of Shirley Community Ambulance.',
     image: '/images/station.jpg',
   },
+  '/members/trainings': {
+    title: 'Trainings | Shirley Community Ambulance',
+    description: 'Training files and assignments for Shirley Community Ambulance members.',
+    image: '/images/station.jpg',
+  },
   '/members/probationary': {
     title: 'Probationary | Shirley Community Ambulance',
     description: 'Probationary members of Shirley Community Ambulance.',
@@ -109,7 +114,7 @@ export const PAGE_SEO = {
   '/members/forms/reimbursement': {
     title: 'Reimbursement | Shirley Community Ambulance',
     description:
-      'Submit a reimbursement for this visit. Entries stay in the browser session only.',
+      'Submit a reimbursement. Alcohol purchases are not reimbursed. The total is calculated from the items, and a copy is sent to the treasurer.',
     image: '/images/station.jpg',
   },
   '/members/forms/bls-preceptor': {

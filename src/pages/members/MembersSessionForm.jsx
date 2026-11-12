@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { readSession } from '../../auth/session'
 import { Field } from '../../components/UI'
 import { useFormAccess } from './formAccess'
+import { authorizedFetch } from './memberApi'
+import { formatUsDate } from './memberDates'
 
 const BLS_SKILLS = [
   'Bp',
@@ -30,8 +33,9 @@ const ALS_SKILLS = [
   'CPAP',
 ]
 
-// Shirley has no forms API. Each form keeps what this visit submits, and a
-// refresh discards it. Nothing here is loaded from a server.
+// Uniform stays in this browser session. BLS and ALS preceptor forms are
+// CUSTOM_FORM_DEFINITION templates on the Shirley server. Reimbursement is its
+// own page and its own tables.
 const FORMS = {
   uniform: {
     title: 'Uniform request',
@@ -46,34 +50,13 @@ const FORMS = {
       { name: 'notes', label: 'Notes', rows: 4 },
     ],
   },
-  reimbursement: {
-    title: 'Reimbursement',
-    lead:
-      'Record what the expense was for. There is no forms service behind this page, so an entry stays in this browser session only. It appears below after you submit it and is discarded when you refresh or leave.',
-    empty: 'No reimbursements yet.',
-    submit: 'Submit reimbursement',
-    fields: [
-      { name: 'purpose', label: 'What it was for', required: true },
-      {
-        name: 'amount',
-        label: 'Amount',
-        type: 'number',
-        required: true,
-        min: 0,
-        step: '0.01',
-        inputMode: 'decimal',
-      },
-      { name: 'date', label: 'Date', type: 'date', required: true },
-      { name: 'notes', label: 'Notes', rows: 4 },
-    ],
-  },
   bls: {
     title: 'BLS preceptor form',
-    lead:
-      'Fill this in for the visit. There is no forms service behind this page, so an entry stays in this browser session only. It appears below after you submit it and is discarded when you refresh or leave.',
+    lead: 'Fill this in for the visit. It is saved on the Shirley server.',
     empty: 'No BLS preceptor forms yet.',
     submit: 'Submit form',
     editable: true,
+    templateName: 'BLS Preceptor',
     fields: [
       { name: 'student', label: 'Student name', required: true },
       { name: 'preceptor', label: 'Preceptor name', required: true },
@@ -85,11 +68,11 @@ const FORMS = {
   },
   als: {
     title: 'ALS preceptor form',
-    lead:
-      'Fill this in for the visit. There is no forms service behind this page, so an entry stays in this browser session only. It appears below after you submit it and is discarded when you refresh or leave.',
+    lead: 'Fill this in for the visit. It is saved on the Shirley server.',
     empty: 'No ALS preceptor forms yet.',
     submit: 'Submit form',
     editable: true,
+    templateName: 'ALS Preceptor',
     fields: [
       { name: 'student', label: 'Student name', required: true },
       { name: 'preceptor', label: 'Preceptor name', required: true },
@@ -106,9 +89,7 @@ function blankValues(fields) {
 }
 
 function formatDate(value) {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
-  if (!match) return value
-  return `${match[2]}/${match[3]}/${match[1]}`
+  return formatUsDate(value) || value
 }
 
 function displayValue(field, value) {
@@ -140,6 +121,40 @@ function fieldError(field, raw) {
 
 function valuesFromEntry(fields, entry) {
   return Object.fromEntries(fields.map((field) => [field.name, entry?.[field.name] ?? '']))
+}
+
+function valuesPayload(fields, next) {
+  const payload = {}
+  for (const field of fields) {
+    const raw = next[field.name] ?? ''
+    if (field.type === 'radio') {
+      payload[field.name] = String(field.options.indexOf(raw))
+      continue
+    }
+    if (raw) payload[field.name] = raw
+  }
+  return payload
+}
+
+function entryFromSubmission(fields, submission) {
+  let stored = {}
+  try {
+    stored = JSON.parse(submission.valuesJson || '{}')
+  } catch {
+    stored = {}
+  }
+  const entry = { id: submission.id }
+  for (const field of fields) {
+    const raw = stored[field.name]
+    if (field.type === 'radio') {
+      const index = Number(raw)
+      entry[field.name] = Number.isInteger(index) ? (field.options[index] ?? '') : ''
+    } else {
+      entry[field.name] = raw == null ? '' : String(raw)
+    }
+  }
+  if (!entry.notes && submission.notes) entry.notes = submission.notes
+  return entry
 }
 
 function skillRows(options, rowCount = 3) {
@@ -202,7 +217,65 @@ function SessionForm({ kind }) {
   const [values, setValues] = useState(() => blankValues(form.fields))
   const [error, setError] = useState('')
   const [editingId, setEditingId] = useState(null)
+  const [definitionId, setDefinitionId] = useState(null)
+  const [loaded, setLoaded] = useState(!form.templateName)
+  const [saving, setSaving] = useState(false)
   const canEdit = access.canEdit
+
+  useEffect(() => {
+    if (!form.templateName) return undefined
+    const session = readSession()
+    if (!session) {
+      setLoaded(true)
+      setError('Sign in again to load this form.')
+      return undefined
+    }
+    let cancelled = false
+    async function load() {
+      try {
+        const definitions = await authorizedFetch(session, '/custom-forms/definitions')
+        if (!definitions.response.ok) {
+          throw new Error(definitions.message || 'The form template could not be loaded.')
+        }
+        const defs = await definitions.response.json()
+        const match = (Array.isArray(defs) ? defs : []).find(
+          (item) => item?.name === form.templateName && item.isActive !== false,
+        )
+        if (!match) {
+          if (!cancelled) {
+            setError(`${form.templateName} is not on the server yet.`)
+            setLoaded(true)
+          }
+          return
+        }
+        const submissions = await authorizedFetch(
+          session,
+          `/custom-forms/submissions?formDefinitionId=${match.id}`,
+        )
+        if (!submissions.response.ok) {
+          throw new Error(submissions.message || 'Saved forms could not be loaded.')
+        }
+        const body = await submissions.response.json()
+        const saved = (Array.isArray(body) ? body : [])
+          .map((item) => entryFromSubmission(form.fields, item))
+          .reverse()
+        if (!cancelled) {
+          setDefinitionId(match.id)
+          setEntries(saved)
+          setLoaded(true)
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'The form could not be loaded.')
+          setLoaded(true)
+        }
+      }
+    }
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [form])
 
   function update(name) {
     return (event) => {
@@ -232,27 +305,68 @@ function SessionForm({ kind }) {
     setError('')
   }
 
-  function handleSubmit(event) {
-    event.preventDefault()
+  function collectedValues() {
     const next = {}
     for (const field of form.fields) {
       const raw = String(values[field.name] ?? '').trim()
       const problem = fieldError(field, raw)
       if (problem) {
         setError(problem)
-        return
+        return null
       }
       next[field.name] = raw
     }
+    return next
+  }
+
+  function rememberEntry(entry) {
     setEntries((current) => {
       if (editingId && editingId !== 'new') {
-        return current.map((entry) => (entry.id === editingId ? { ...entry, ...next } : entry))
+        return current.map((item) => (item.id === editingId ? entry : item))
       }
-      return [...current, { id: crypto.randomUUID(), ...next }]
+      return [...current, entry]
     })
     setEditingId(null)
     setValues(blankValues(form.fields))
     setError('')
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+    const next = collectedValues()
+    if (!next) return
+    if (!form.templateName) {
+      rememberEntry({ id: crypto.randomUUID(), ...next })
+      return
+    }
+    if (!definitionId) {
+      setError(`${form.templateName} is not on the server yet.`)
+      return
+    }
+    const updating = editingId && editingId !== 'new'
+    setSaving(true)
+    try {
+      const session = readSession()
+      const body = {
+        formDefinitionId: definitionId,
+        notes: next.notes || undefined,
+        valuesJson: JSON.stringify(valuesPayload(form.fields, next)),
+      }
+      const { response, message } = await authorizedFetch(
+        session,
+        updating ? `/custom-forms/submissions/${editingId}` : '/custom-forms/submissions',
+        { method: updating ? 'PATCH' : 'POST', body: JSON.stringify(body) },
+      )
+      if (!response.ok) {
+        setError(message || 'The form could not be saved.')
+        return
+      }
+      rememberEntry(entryFromSubmission(form.fields, await response.json()))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'The form could not be saved.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const editing = editingId !== null
@@ -273,7 +387,11 @@ function SessionForm({ kind }) {
           ) : null}
         </header>
 
-        {entries.length === 0 ? (
+        {!loaded ? (
+          <p className="members-panel__empty" role="status">
+            Loading saved forms…
+          </p>
+        ) : entries.length === 0 ? (
           <p className="members-panel__empty" role="status">
             {form.empty}
           </p>
@@ -340,8 +458,12 @@ function SessionForm({ kind }) {
             ),
           )}
           <div className="btn-row">
-            <button type="submit" className="btn btn--navy">
-              {editing ? 'Save' : form.submit}
+            <button
+              type="submit"
+              className="btn btn--navy"
+              disabled={saving || (Boolean(form.templateName) && !definitionId)}
+            >
+              {saving ? 'Saving…' : editing ? 'Save' : form.submit}
             </button>
             {editing ? (
               <button type="button" className="btn btn--outline" onClick={cancelEdit}>

@@ -7,6 +7,7 @@ import { MEMBER_STATUSES, memberStatusLabel, memberStatusLocksOut, memberStatusV
 import MembersUserPermissions from './MembersUserPermissions'
 import { BOARD_POSITIONS } from '../../data/boardPositions'
 import { CERTIFICATION_OPTIONS, COUNTRIES, LANGUAGES, LICENSE_TYPES, STATES } from './userDetailsOptions'
+import { formatUsDate } from './memberDates'
 import { readUserDetailsId, writeUserDetailsId } from './userDetailsSelection'
 import './user-details.css'
 
@@ -523,8 +524,15 @@ function UserDetailsScreen() {
   const session = readSession()
   const roles = Array.isArray(session?.roles) ? session.roles : []
   const canEdit =
-    roles.some((role) => EDIT_ROLES.includes(role)) ||
+    roles.includes(ROLE_ORG_ADMIN) ||
+    roles.includes(ROLE_APP_ADMIN) ||
     (Array.isArray(viewerPermissions) && viewerPermissions.includes('PERMISSION_USERS_EDIT'))
+  const canChangePermissions =
+    roles.includes(ROLE_ORG_ADMIN) ||
+    roles.includes(ROLE_APP_ADMIN) ||
+    (Array.isArray(viewerPermissions) &&
+      (viewerPermissions.includes('PERMISSION_PERMISSIONS_EDIT') ||
+        ['VIEW', 'CREATE', 'EDIT', 'DELETE'].every((kind) => viewerPermissions.includes(`PERMISSION_PERMISSIONS_${kind}`))))
   const viewerIsOrgAdmin = roles.includes(ROLE_ORG_ADMIN)
   const viewerIsUser = roles.includes(ROLE_USER) && !roles.some((role) => EDIT_ROLES.includes(role))
   const viewerIsSupervisor = roles.includes(ROLE_SUPERVISOR) && !roles.includes(ROLE_ORG_ADMIN) && !roles.includes(ROLE_APP_ADMIN)
@@ -566,7 +574,7 @@ function UserDetailsScreen() {
     event.preventDefault()
     setSaveError('')
     setSaved(false)
-    if (!user) return
+    if (!user || !canEdit) return
     if (!String(user.username || '').trim() || !String(user.firstName || '').trim() || !String(user.lastName || '').trim() || !String(user.email || '').trim()) {
       setSaveError('Username, first name, last name, and email are required.')
       return
@@ -732,7 +740,7 @@ function UserDetailsScreen() {
               </div>
               <div className="c4t-fleet-stat">
                 <span>Fit testing</span>
-                <strong>{dateInput(user.fitTesting) || '—'}</strong>
+                <strong>{formatUsDate(user.fitTesting) || '—'}</strong>
               </div>
             </div>
             {showTabs ? (
@@ -759,30 +767,30 @@ function UserDetailsScreen() {
                       <>
                         <label htmlFor="startDate">
                           Start Date:
-                          <input id="startDate" className={inputClass} type="date" name="startDate" value={user.startDate || ''} readOnly={!editing} onChange={onField} />
+                          <input id="startDate" className={inputClass} type="date" name="startDate" value={user.startDate || ''} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="username">
                           Username:
-                          <input id="username" className={inputClass} type="text" name="username" value={user.username || ''} autoComplete="off" readOnly={!editing} onChange={onField} />
+                          <input id="username" className={inputClass} type="text" name="username" value={user.username || ''} autoComplete="off" disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="email">
                           Email:
-                          <input id="email" className={inputClass} type="email" name="email" value={user.email || ''} autoComplete="off" readOnly={!editing} onChange={onField} />
+                          <input id="email" className={inputClass} type="email" name="email" value={user.email || ''} autoComplete="off" disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="emtNumbers">
                           EMT Numbers:
-                          <input id="emtNumbers" className={inputClass} type="text" name="emtNumbers" value={user.emtNumbers ?? ''} autoComplete="off" readOnly={!editing} onChange={onField} />
+                          <input id="emtNumbers" className={inputClass} type="text" name="emtNumbers" value={user.emtNumbers ?? ''} autoComplete="off" disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         {user.isPaid ? null : (
                           <label htmlFor="yearsAccrued">
                             Years accrued:
-                            <input id="yearsAccrued" className={inputClass} readOnly value={accruedText(accrued)} />
+                            <input id="yearsAccrued" className={inputClass} disabled value={accruedText(accrued)} />
                           </label>
                         )}
                         <label htmlFor="memberStatus">
                           Status:
                           {editing ? (
-                            <select id="memberStatus" className={inputClass} name="memberStatus" value={user.memberStatus} onChange={onField}>
+                            <select id="memberStatus" className={inputClass} name="memberStatus" value={user.memberStatus} disabled={!canEdit} onChange={onField}>
                               {MEMBER_STATUSES.map((item) => (
                                 <option key={item.value} value={item.value}>
                                   {item.label}
@@ -790,7 +798,7 @@ function UserDetailsScreen() {
                               ))}
                             </select>
                           ) : (
-                            <input id="memberStatus" className={`${inputClass} ${memberStatusLocksOut(user.memberStatus) ? 'inactive-text' : 'active-text'}`} readOnly value={statusLabel} />
+                            <input id="memberStatus" className={`${inputClass} ${memberStatusLocksOut(user.memberStatus) ? 'inactive-text' : 'active-text'}`} disabled value={statusLabel} />
                           )}
                         </label>
                       </>
@@ -799,19 +807,19 @@ function UserDetailsScreen() {
                       <>
                         <label htmlFor="firstName">
                           First Name:
-                          <input id="firstName" className={inputClass} name="firstName" value={user.firstName || ''} autoComplete="off" readOnly={!editing} onChange={onField} />
+                          <input id="firstName" className={inputClass} name="firstName" value={user.firstName || ''} autoComplete="off" disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="middleName">
                           Middle Name:
-                          <input id="middleName" className={inputClass} name="middleName" value={user.middleName || ''} autoComplete="off" readOnly={!editing} onChange={onField} />
+                          <input id="middleName" className={inputClass} name="middleName" value={user.middleName || ''} autoComplete="off" disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="lastName">
                           Last Name:
-                          <input id="lastName" className={inputClass} name="lastName" value={user.lastName || ''} autoComplete="off" readOnly={!editing} onChange={onField} />
+                          <input id="lastName" className={inputClass} name="lastName" value={user.lastName || ''} autoComplete="off" disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="sex">
                           Sex:
-                          <select id="sex" className={inputClass} name="sex" value={user.sex || ''} disabled={!editing} onChange={onField}>
+                          <select id="sex" className={inputClass} name="sex" value={user.sex || ''} disabled={!canEdit || !editing} onChange={onField}>
                             <option value="">Sex</option>
                             <option value="MALE">MALE</option>
                             <option value="FEMALE">FEMALE</option>
@@ -819,11 +827,11 @@ function UserDetailsScreen() {
                         </label>
                         <label htmlFor="dateOfBirth">
                           Date of Birth:
-                          <input id="dateOfBirth" className={inputClass} type="date" name="dateOfBirth" value={user.dateOfBirth || ''} readOnly={!editing} onChange={onField} />
+                          <input id="dateOfBirth" className={inputClass} type="date" name="dateOfBirth" value={user.dateOfBirth || ''} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="foreignLanguage">
                           Foreign Language:
-                          <select id="foreignLanguage" className={inputClass} name="foreignLanguage" value={user.foreignLanguage || 'en'} disabled={!editing} onChange={onField}>
+                          <select id="foreignLanguage" className={inputClass} name="foreignLanguage" value={user.foreignLanguage || 'en'} disabled={!canEdit || !editing} onChange={onField}>
                             {LANGUAGES.map(([value, label]) => (
                               <option key={value} value={value}>
                                 {label}
@@ -840,11 +848,11 @@ function UserDetailsScreen() {
                       <>
                         <label htmlFor="memberId">
                           Member Id:
-                          <input id="memberId" className={inputClass} type="number" name="memberId" value={user.memberId ?? ''} readOnly={!editing} onChange={onField} />
+                          <input id="memberId" className={inputClass} type="number" name="memberId" value={user.memberId ?? ''} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="fitTesting">
                           Fit Testing:
-                          <input id="fitTesting" className={`${inputClass} ${fitClass(user.fitTesting)}`} type="date" name="fitTesting" value={user.fitTesting || ''} readOnly={!editing} onChange={onField} />
+                          <input id="fitTesting" className={`${inputClass} ${fitClass(user.fitTesting)}`} type="date" name="fitTesting" value={user.fitTesting || ''} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="boardPosition">
                           Position:
@@ -853,7 +861,7 @@ function UserDetailsScreen() {
                             className={inputClass}
                             name="boardPosition"
                             value={user.boardPosition || ''}
-                            disabled={!editing}
+                            disabled={!canEdit || !editing}
                             onChange={onField}
                           >
                             <option value="">No board seat</option>
@@ -866,7 +874,7 @@ function UserDetailsScreen() {
                         </label>
                         <label htmlFor="role">
                           Role:
-                          <select id="role" className={inputClass} name="role" value={user.role || ROLE_USER} disabled={!editing} onChange={onField}>
+                          <select id="role" className={inputClass} name="role" value={user.role || ROLE_USER} disabled={!canEdit || !editing} onChange={onField}>
                             <option value={ROLE_USER}>User</option>
                             {viewerIsOrgAdmin ? (
                               <option value={ROLE_ORG_ADMIN} disabled={adminLimit != null && adminCount >= adminLimit && user.role !== ROLE_ORG_ADMIN}>
@@ -880,7 +888,7 @@ function UserDetailsScreen() {
                         </label>
                         <label htmlFor="certification">
                           Certification:
-                          <select id="certification" className={inputClass} name="certification" value={user.certification || ''} disabled={!editing} onChange={onField}>
+                          <select id="certification" className={inputClass} name="certification" value={user.certification || ''} disabled={!canEdit || !editing} onChange={onField}>
                             <option value="">Certification</option>
                             {!knownCert && user.certification ? <option value={user.certification}>{user.certification}</option> : null}
                             {CERTIFICATION_OPTIONS.map((item) => (
@@ -892,7 +900,7 @@ function UserDetailsScreen() {
                         </label>
                         <label htmlFor="isPaid">
                           Employee Status:
-                          <select id="isPaid" className={inputClass} value={user.isPaid ? 'true' : 'false'} disabled={!editing} onChange={(event) => setField('isPaid', event.target.value === 'true')}>
+                          <select id="isPaid" className={inputClass} value={user.isPaid ? 'true' : 'false'} disabled={!canEdit || !editing} onChange={(event) => setField('isPaid', event.target.value === 'true')}>
                             {viewerIsUser ? null : <option value="true">Employee</option>}
                             {viewerIsSupervisor ? null : <option value="false">Volunteer</option>}
                           </select>
@@ -903,15 +911,15 @@ function UserDetailsScreen() {
                       <>
                         <label htmlFor="address">
                           Address:
-                          <input id="address" className={inputClass} name="address" value={user.address || ''} readOnly={!editing} onChange={onField} />
+                          <input id="address" className={inputClass} name="address" value={user.address || ''} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="city">
                           City:
-                          <input id="city" className={inputClass} name="city" value={user.city || ''} readOnly={!editing} onChange={onField} />
+                          <input id="city" className={inputClass} name="city" value={user.city || ''} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="state">
                           State:
-                          <select id="state" className={inputClass} name="state" value={user.state || ''} disabled={!editing} onChange={onField}>
+                          <select id="state" className={inputClass} name="state" value={user.state || ''} disabled={!canEdit || !editing} onChange={onField}>
                             <option value="">Select State</option>
                             {user.state && !STATES.includes(user.state) ? <option value={user.state}>{user.state}</option> : null}
                             {STATES.map((state) => (
@@ -923,11 +931,11 @@ function UserDetailsScreen() {
                         </label>
                         <label htmlFor="zipCode">
                           Zip Code:
-                          <input id="zipCode" className={inputClass} name="zipCode" value={user.zipCode || ''} readOnly={!editing} onChange={onField} />
+                          <input id="zipCode" className={inputClass} name="zipCode" value={user.zipCode || ''} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="citizenship">
                           Citizenship:
-                          <select id="citizenship" className={inputClass} name="citizenship" value={user.citizenship || ''} disabled={!editing} onChange={onField}>
+                          <select id="citizenship" className={inputClass} name="citizenship" value={user.citizenship || ''} disabled={!canEdit || !editing} onChange={onField}>
                             <option value="">Select Country</option>
                             {COUNTRIES.map(([value, label]) => (
                               <option key={`${value}-${label}`} value={value}>
@@ -938,7 +946,7 @@ function UserDetailsScreen() {
                         </label>
                         <label htmlFor="phoneNumber">
                           Phone #:
-                          <input id="phoneNumber" className={inputClass} name="phoneNumber" value={user.phoneNumber || ''} placeholder="123-456-7890" maxLength={12} disabled={!editing} onChange={onField} />
+                          <input id="phoneNumber" className={inputClass} name="phoneNumber" value={user.phoneNumber || ''} placeholder="123-456-7890" maxLength={12} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                       </>
                     ) : null}
@@ -949,11 +957,11 @@ function UserDetailsScreen() {
                       <>
                         <label htmlFor="licenseExpiration">
                           License Expiration:
-                          <input id="licenseExpiration" className={`${inputClass} ${licenseClass(user.licenseExpiration)}`} type="date" name="licenseExpiration" value={user.licenseExpiration || ''} readOnly={!editing} onChange={onField} />
+                          <input id="licenseExpiration" className={`${inputClass} ${licenseClass(user.licenseExpiration)}`} type="date" name="licenseExpiration" value={user.licenseExpiration || ''} disabled={!canEdit || !editing} onChange={onField} />
                         </label>
                         <label htmlFor="licenseType">
                           License Type:
-                          <select id="licenseType" className={inputClass} name="licenseType" value={user.licenseType || ''} disabled={!editing} onChange={onField}>
+                          <select id="licenseType" className={inputClass} name="licenseType" value={user.licenseType || ''} disabled={!canEdit || !editing} onChange={onField}>
                             <option value="">Select a license type</option>
                             {user.licenseType && !LICENSE_TYPES.includes(user.licenseType) ? <option value={user.licenseType}>{user.licenseType}</option> : null}
                             {LICENSE_TYPES.map((type) => (
@@ -967,11 +975,11 @@ function UserDetailsScreen() {
                           Drug Test:
                           {editing ? (
                             <span className="user-details__pair">
-                              <input id="drugTest" className={`${inputClass} ${drugClass(user.drugTest)}`} name="drugTest" value={user.drugTest || ''} onChange={onField} />
-                              <input className={inputClass} type="date" name="drugTestDate" value={user.drugTestDate || ''} onChange={onField} aria-label="Drug test date" />
+                              <input id="drugTest" className={`${inputClass} ${drugClass(user.drugTest)}`} name="drugTest" value={user.drugTest || ''} disabled={!canEdit} onChange={onField} />
+                              <input className={inputClass} type="date" name="drugTestDate" value={user.drugTestDate || ''} disabled={!canEdit} onChange={onField} aria-label="Drug test date" />
                             </span>
                           ) : (
-                            <input id="drugTest" className={`${inputClass} ${drugClass(user.drugTest)}`} readOnly value={user.drugTest ? `${user.drugTest}${user.drugTestDate ? ` on ${user.drugTestDate}` : ''}` : 'Not Tested'} />
+                            <input id="drugTest" className={`${inputClass} ${drugClass(user.drugTest)}`} disabled value={user.drugTest ? `${user.drugTest}${formatUsDate(user.drugTestDate) ? ` on ${formatUsDate(user.drugTestDate)}` : ''}` : 'Not Tested'} />
                           )}
                         </label>
                       </>
@@ -999,7 +1007,7 @@ function UserDetailsScreen() {
                       </tbody>
                     </table>
                     {editing ? (
-                      <button type="button" className="c4t-board-cta is-ghost" onClick={() => setContactOpen(true)}>
+                      <button type="button" className="c4t-board-cta is-ghost" disabled={!canEdit} onClick={() => canEdit && setContactOpen(true)}>
                         Add Emergency Contact
                       </button>
                     ) : null}
@@ -1020,14 +1028,14 @@ function UserDetailsScreen() {
                         {Object.entries(user.certificates || {}).map(([name, details]) => (
                           <tr key={name}>
                             <td>{name}</td>
-                            <td>{dateInput(details?.expirationDate) || '—'}</td>
+                            <td>{formatUsDate(details?.expirationDate) || '—'}</td>
                             <td>{details?.imgName || 'No image'}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                     {editing ? (
-                      <button type="button" className="c4t-board-cta is-ghost" onClick={() => setCertOpen(true)}>
+                      <button type="button" className="c4t-board-cta is-ghost" disabled={!canEdit} onClick={() => canEdit && setCertOpen(true)}>
                         Add Certification
                       </button>
                     ) : null}
@@ -1084,10 +1092,11 @@ function UserDetailsScreen() {
                                         type="date"
                                         aria-label={`${statusName} start`}
                                         value={period.startDate || ''}
+                                        disabled={!canEdit}
                                         onChange={(event) => setPeriodDate(period.id, 'startDate', event.target.value)}
                                       />
                                     ) : (
-                                      period.startDate || '—'
+                                      formatUsDate(period.startDate) || '—'
                                     )}
                                   </td>
                                   <td>
@@ -1096,15 +1105,16 @@ function UserDetailsScreen() {
                                         type="date"
                                         aria-label={`${statusName} end`}
                                         value={period.endDate || ''}
+                                        disabled={!canEdit}
                                         onChange={(event) => setPeriodDate(period.id, 'endDate', event.target.value)}
                                       />
                                     ) : (
-                                      period.endDate || 'Current'
+                                      formatUsDate(period.endDate) || 'Current'
                                     )}
                                   </td>
                                   {editing ? (
                                     <td>
-                                      <button type="button" className="c4t-board-cta is-ghost" onClick={() => deletePeriod(period.id)}>
+                                      <button type="button" className="c4t-board-cta is-ghost" disabled={!canEdit} onClick={() => canEdit && deletePeriod(period.id)}>
                                         Delete
                                       </button>
                                     </td>
@@ -1120,21 +1130,26 @@ function UserDetailsScreen() {
                 ) : null}
               </form>
             ) : (
-              <MembersUserPermissions userId={userId} user={user} suppliesSubscribed={suppliesSubscribed} />
+              <MembersUserPermissions
+                userId={userId}
+                user={user}
+                suppliesSubscribed={suppliesSubscribed}
+                locked={!canChangePermissions}
+              />
             )}
 
-            {canEdit && tab !== 'permissions' ? (
+            {tab !== 'permissions' ? (
               <div className="c4t-fleet-footer">
                 {!editing ? (
-                  <button type="button" className="c4t-board-cta" onClick={() => setEditing(true)}>
+                  <button type="button" className="c4t-board-cta" disabled={!canEdit} onClick={() => canEdit && setEditing(true)}>
                     Edit
                   </button>
                 ) : (
                   <>
-                    <button type="button" className="c4t-board-cta" onClick={save} disabled={saving}>
+                    <button type="button" className="c4t-board-cta" onClick={save} disabled={!canEdit || saving}>
                       {saving ? 'Saving…' : 'Save'}
                     </button>
-                    <button type="button" className="c4t-board-cta is-ghost" onClick={cancelEdit}>
+                    <button type="button" className="c4t-board-cta is-ghost" disabled={!canEdit} onClick={cancelEdit}>
                       Cancel
                     </button>
                   </>
@@ -1154,7 +1169,12 @@ function UserDetailsScreen() {
               addContact()
             }}
           >
-            <h2 id="add-contact-title">Add Emergency Contact</h2>
+            <header className="calendar-modal__head">
+              <h2 id="add-contact-title">Add Emergency Contact</h2>
+              <button type="button" className="calendar-modal__close" aria-label="Close" onClick={() => setContactOpen(false)}>
+                ×
+              </button>
+            </header>
             <label>
               Name
               <input value={contactName} onChange={(event) => setContactName(event.target.value)} required />
@@ -1180,7 +1200,12 @@ function UserDetailsScreen() {
               addCertificate()
             }}
           >
-            <h2 id="add-cert-title">Add Certification</h2>
+            <header className="calendar-modal__head">
+              <h2 id="add-cert-title">Add Certification</h2>
+              <button type="button" className="calendar-modal__close" aria-label="Close" onClick={() => setCertOpen(false)}>
+                ×
+              </button>
+            </header>
             <label>
               Certification Name
               <input value={certName} onChange={(event) => setCertName(event.target.value)} required />

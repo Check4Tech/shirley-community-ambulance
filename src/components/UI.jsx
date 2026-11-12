@@ -268,6 +268,7 @@ export function Field({
   min,
   step,
   inputMode,
+  placeholder,
 }) {
   const id = `f-${name}`
   const common = {
@@ -286,6 +287,7 @@ export function Field({
     ...(min != null ? { min } : null),
     ...(step != null ? { step } : null),
     ...(inputMode ? { inputMode } : null),
+    ...(placeholder ? { placeholder } : null),
   }
 
   return (

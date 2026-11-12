@@ -370,6 +370,10 @@
   font-size: 1.25rem;
 }
 
+.user-details__dialog .calendar-modal__head {
+  margin-bottom: 0;
+}
+
 .user-details__dialog label {
   display: flex;
   flex-direction: column;

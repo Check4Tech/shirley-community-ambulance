@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Field } from '../../components/UI'
 import { apiBaseUrl } from '../../auth/session'
 import { useCalendarAccess } from './calendarAccess'
+import { formatUsDate } from './memberDates'
 import {
   CALENDAR_NARROW_QUERY,
   RECURRENCE_LABELS,
@@ -52,11 +53,7 @@ function toTimeInput(value) {
 }
 
 function dayHeading(year, monthIndex, day) {
-  return new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(year, monthIndex, day))
+  return formatUsDate([year, monthIndex + 1, day])
 }
 
 function viewMonthName(year, monthIndex) {

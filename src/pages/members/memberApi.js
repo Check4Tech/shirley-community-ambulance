@@ -48,7 +48,9 @@ export async function authorizedFetch(session, path, options = {}) {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${current.accessToken}`,
-        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+        ...(options.body && !(typeof FormData !== 'undefined' && options.body instanceof FormData)
+          ? { 'Content-Type': 'application/json' }
+          : {}),
         ...options.headers,
       },
     })

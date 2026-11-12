@@ -4,6 +4,7 @@ import Layout from './components/Layout'
 import Loader from './components/Loader'
 import Home from './pages/Home'
 import { applySeo } from './seo'
+import { PROBATIONARY_PERMISSION, STUDENTS_PERMISSION } from './pages/members/cohortAccess'
 
 // The landing page is bundled eagerly because it is the most common entry
 // point; the rest are split so each route is a small separate download. The
@@ -19,12 +20,16 @@ const MembersLayout = lazy(() => import('./pages/members/MembersLayout'))
 const MembersHome = lazy(() => import('./pages/members/MembersHome'))
 const MembersCalendar = lazy(() => import('./pages/members/MembersCalendar'))
 const MembersRoster = lazy(() => import('./pages/members/MembersRoster'))
+const MembersTrainings = lazy(() => import('./pages/members/MembersTrainings'))
+const RequireCohort = lazy(() => import('./pages/members/RequireCohort'))
 const MembersUserDetails = lazy(() => import('./pages/members/MembersUserDetails'))
 const MembersBylaws = lazy(() => import('./pages/members/MembersBylaws'))
 const MembersBylawSubmissions = lazy(() => import('./pages/members/MembersBylawSubmissions'))
 const MembersSessionForm = lazy(() => import('./pages/members/MembersSessionForm'))
+const MembersReimbursement = lazy(() => import('./pages/members/MembersReimbursement'))
 const RequireMember = lazy(() => import('./pages/members/RequireMember'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const MemberSessionHandoff = lazy(() => import('./pages/MemberSessionHandoff'))
 
 // Old GoDaddy paths -> their new location. The student program page used to
 // live at a path containing an encoded slash, so both spellings are covered.
@@ -61,6 +66,10 @@ function RouteEffects() {
     let frames = 0
     let raf = 0
     const tryScroll = () => {
+      if (!/^#[A-Za-z][\w-]*$/.test(hash)) {
+        window.scrollTo(0, 0)
+        return
+      }
       const el = document.querySelector(hash)
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' })
@@ -92,6 +101,7 @@ export default function App() {
           <Route path="/fundraiser" element={<Fundraiser />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/members" element={<Members />} />
+          <Route path="/shirley/member-session" element={<MemberSessionHandoff />} />
           <Route
             element={
               <RequireMember>
@@ -104,13 +114,28 @@ export default function App() {
             <Route path="/members/roster" element={<MembersRoster />} />
             <Route path="/members/user-details" element={<MembersUserDetails />} />
             <Route path="/members/user-details/:userId" element={<MembersUserDetails />} />
-            <Route path="/members/students" element={<MembersRoster group="students" />} />
-            <Route path="/members/probationary" element={<MembersRoster group="probationary" />} />
+            <Route
+              path="/members/students"
+              element={
+                <RequireCohort permission={STUDENTS_PERMISSION}>
+                  <MembersRoster group="students" />
+                </RequireCohort>
+              }
+            />
+            <Route path="/members/trainings" element={<MembersTrainings />} />
+            <Route
+              path="/members/probationary"
+              element={
+                <RequireCohort permission={PROBATIONARY_PERMISSION}>
+                  <MembersRoster group="probationary" />
+                </RequireCohort>
+              }
+            />
             <Route path="/members/forms/bylaw" element={<MembersBylaws />} />
             <Route path="/members/forms/bylaw/submissions" element={<MembersBylawSubmissions />} />
             <Route path="/members/forms/bylaw/:id" element={<MembersBylaws />} />
             <Route path="/members/forms/uniform" element={<MembersSessionForm kind="uniform" />} />
-            <Route path="/members/forms/reimbursement" element={<MembersSessionForm kind="reimbursement" />} />
+            <Route path="/members/forms/reimbursement" element={<MembersReimbursement />} />
             <Route path="/members/forms/bls-preceptor" element={<MembersSessionForm kind="bls" />} />
             <Route path="/members/forms/als-preceptor" element={<MembersSessionForm kind="als" />} />
             <Route path="/members/bylaws" element={<Navigate to="/members/forms/bylaw" replace />} />

@@ -1,3 +1,5 @@
+import { formatUsDate } from './memberDates'
+
 /** America/New_York members calendar recurrence. Display time stays 24-hour compact, like 1930. */
 
 export const NY_TIME_ZONE = 'America/New_York'
@@ -155,11 +157,7 @@ function isoWeekdayToJs(iso) {
 }
 
 function formatWhen(year, month, day) {
-  return new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(year, month - 1, day))
+  return formatUsDate([year, month, day])
 }
 
 function isoDate(date) {

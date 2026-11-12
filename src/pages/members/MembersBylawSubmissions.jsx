@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import { apiBaseUrl, readSession } from '../../auth/session'
 import { useBylawsAccess } from './bylawAccess'
+import { formatUsDate } from './memberDates'
 
 function blank(value) {
   if (value == null) return ''
@@ -15,13 +16,13 @@ function textOrDash(value) {
 }
 
 function dateLabel(value) {
+  if (Array.isArray(value)) {
+    const formatted = formatUsDate(value)
+    return formatted || '—'
+  }
   const text = blank(value)
   if (!text) return '—'
-  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(text)
-  if (!match) return text
-  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
-  if (Number.isNaN(date.getTime())) return text
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return formatUsDate(text) || '—'
 }
 
 function submitterLabel(row) {

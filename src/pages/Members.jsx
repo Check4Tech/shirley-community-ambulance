@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { org } from '../data/site'
 import { Field } from '../components/UI'
-import { apiBaseUrl, readSession, writeSession } from '../auth/session'
+import { apiBaseUrl, logoutMember, readSession, writeSession } from '../auth/session'
+import UpdateCredentialsPrompt from './members/UpdateCredentialsPrompt'
 import { signInLockoutMessage } from './members/memberStatus'
 import './members.css'
 
@@ -66,6 +67,7 @@ export default function Members() {
   const [resetError, setResetError] = useState('')
   const [resetStatus, setResetStatus] = useState('')
   const [resetting, setResetting] = useState(false)
+  const [signedOutNotice, setSignedOutNotice] = useState('')
 
   function updateField(field) {
     return (event) => {
@@ -215,6 +217,19 @@ export default function Members() {
     }
   }
 
+  if (session?.hasDefaultPassword) {
+    return (
+      <UpdateCredentialsPrompt
+        session={session}
+        onUpdated={() => {
+          logoutMember(session)
+          setSession(null)
+          setSignedOutNotice('Credentials updated. Sign in with your new password.')
+        }}
+      />
+    )
+  }
+
   if (session) {
     return <Navigate to="/members/home" replace />
   }
@@ -232,6 +247,11 @@ export default function Members() {
           />
           <p className="members__org">{org.name}</p>
           <h1 className="members__title">Members login</h1>
+          {signedOutNotice ? (
+            <p className="members__status" role="status">
+              {signedOutNotice}
+            </p>
+          ) : null}
 
           <form id="members-login" className="form members__form" onSubmit={handleSubmit}>
               <Field

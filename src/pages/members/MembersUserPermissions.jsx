@@ -30,10 +30,12 @@ function rowsFor(module, hideStandard) {
   if (!hideStandard) {
     module.standardEntities.forEach((label) => rows.push({ label, key: label.toLowerCase(), kind: 'standard' }))
   }
+  ;(module.alwaysEntities ?? []).forEach((label) => rows.push({ label, key: label.toLowerCase(), kind: 'standard' }))
   module.logEntities.forEach((label) => rows.push({ label, key: label.toLowerCase(), kind: 'log' }))
   module.maintenanceEntities.forEach((label) => rows.push({ label, key: label.toLowerCase(), kind: 'maintenance' }))
   module.singleGrantEntities.forEach((label) => rows.push({ label, key: label.toLowerCase(), kind: 'grant' }))
   ;(module.calendarEntities ?? []).forEach((label) => rows.push({ label, key: 'calendar', kind: 'calendar' }))
+  ;(module.boardEntities ?? []).forEach((label) => rows.push({ label, key: 'messageboard', kind: 'calendar' }))
   return rows
 }
 
@@ -75,7 +77,7 @@ async function deletePermission(userId, permission) {
   if (!response.ok) throw new Error(message || 'That permission could not be saved.')
 }
 
-export default function MembersUserPermissions({ userId, user, suppliesSubscribed }) {
+export default function MembersUserPermissions({ userId, user, suppliesSubscribed, locked = false }) {
   const [permissions, setPermissions] = useState({})
   const [error, setError] = useState('')
   const role = typeof user?.role === 'string' ? user.role : ''
@@ -111,6 +113,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
   }
 
   async function changePermission(entity, permission, checked, kinds) {
+    if (locked) return
     setError('')
     const before = permissions[entity] || new Set()
     remember(entity, (updated) => {
@@ -140,6 +143,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
   }
 
   async function changeFull(entity, checked, kinds) {
+    if (locked) return
     setError('')
     const before = permissions[entity] || new Set()
     remember(entity, (updated) => {
@@ -159,6 +163,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
   }
 
   async function changeGrant(entity, checked) {
+    if (locked) return
     setError('')
     remember(entity, (updated) => (checked ? updated.add('grant') : updated.delete('grant')))
     try {
@@ -179,6 +184,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
       <p className="c4t-people-permissions-lead">
         {user?.fullName ? `Access for ${user.fullName}. ` : ''}
         Permissions are grouped by module. Changes save when you check a box.
+        {locked ? ' You can look, and only an admin or someone with edit or full access for Permissions can change them.' : ''}
       </p>
       {error ? <p className="c4t-fleet-status is-bad">{error}</p> : null}
       <div className="user-permissions-modules">
@@ -217,6 +223,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
                                 <input
                                   type="checkbox"
                                   checked={hasNone(row.key)}
+                                  disabled={locked}
                                   onChange={(event) => changeGrant(row.key, !event.target.checked)}
                                 />
                               </td>
@@ -228,6 +235,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
                                 <input
                                   type="checkbox"
                                   checked={has(row.key, 'grant')}
+                                  disabled={locked}
                                   onChange={(event) => changeGrant(row.key, event.target.checked)}
                                 />
                               </td>
@@ -260,6 +268,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
                                 <input
                                   type="checkbox"
                                   checked={hasNone(row.key)}
+                                  disabled={locked}
                                   onChange={(event) => changeFull(row.key, !event.target.checked, kinds)}
                                 />
                               </td>
@@ -272,6 +281,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
                                 <input
                                   type="checkbox"
                                   checked={checked}
+                                  disabled={locked}
                                   onChange={(event) =>
                                     row.kind === 'maintenance'
                                       ? changePermission(row.key, 'sign', event.target.checked, [])
@@ -286,6 +296,7 @@ export default function MembersUserPermissions({ userId, user, suppliesSubscribe
                               <input
                                 type="checkbox"
                                 checked={has(row.key, column)}
+                                disabled={locked}
                                 onChange={(event) =>
                                   changePermission(
                                     row.key,

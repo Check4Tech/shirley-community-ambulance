@@ -6,10 +6,13 @@ const MIN_SPINNER_MS = 700
 
 function formatRole(role) {
   if (role == null || role === '') return ''
-  return String(role)
+  const text = String(role)
     .replace(/^ROLE_/, '')
     .replace(/_/g, ' ')
     .trim()
+  if (text.toUpperCase() === 'EMS USER') return 'User'
+  if (text.toUpperCase() === 'EMS ORG ADMIN') return 'Admin'
+  return text
 }
 
 export function memberName(member) {
@@ -27,20 +30,35 @@ export function compareMembers(a, b) {
   return String(a.username ?? '').localeCompare(String(b.username ?? ''), undefined, { sensitivity: 'base' })
 }
 
-function membershipText(member) {
-  return [member?.role, member?.certification, member?.licenseType]
-    .filter((value) => value != null && String(value).trim() !== '')
-    .join(' ')
+function pushText(parts, value) {
+  if (typeof value === 'string' && value.trim()) parts.push(value.trim())
 }
 
-/** Student or youth, from role, certification, or license type. */
+/** Role string from the list DTO, plus roles[].name when the payload is the user entity. */
+function roleNames(member) {
+  const names = []
+  pushText(names, member?.role)
+  if (Array.isArray(member?.roles)) {
+    member.roles.forEach((role) => {
+      if (typeof role === 'string') pushText(names, role)
+      else pushText(names, role?.name)
+    })
+  }
+  return names
+}
+
+/**
+ * The student certification only. Youth and every other certification stay off
+ * the Students personnel list. A role or license that merely contains the word
+ * is not this certification.
+ */
 export function isStudent(member) {
-  return /student|youth/i.test(membershipText(member))
+  return String(member?.certification ?? '').trim().toLowerCase() === 'student'
 }
 
-/** Probationary, from role, certification, or license type. */
+/** The probationary certification only. A role or license that merely contains the word is not this certification. */
 export function isProbationary(member) {
-  return /probation/i.test(membershipText(member))
+  return String(member?.certification ?? '').trim().toLowerCase() === 'probationary'
 }
 
 function memberStatus(member) {
@@ -52,7 +70,7 @@ function mapMembers(data, { sortByName }) {
     id: member.id,
     name: memberName(member),
     username: member.username ?? '',
-    role: formatRole(member.role),
+    role: formatRole(roleNames(member)[0]),
     certification: member.certification ?? '',
     email: member.email ?? '',
     phone: member.phoneNumber ?? '',
@@ -292,7 +310,7 @@ async function loadFilteredMembers(session, list, query) {
   }
 }
 
-export function useActiveMembers({ list = 'all', query = '' } = {}) {
+export function useActiveMembers({ list = 'all', query = '', reloadKey = 0 } = {}) {
   const [state, setState] = useState({
     status: 'loading',
     members: [],
@@ -364,7 +382,7 @@ export function useActiveMembers({ list = 'all', query = '' } = {}) {
     return () => {
       cancelled = true
     }
-  }, [list, query])
+  }, [list, query, reloadKey])
 
   return state
 }

@@ -63,7 +63,9 @@ export function check4techClientOrigin() {
   if (typeof configured === 'string' && configured.trim()) {
     return configured.trim().replace(/\/$/, '')
   }
-  if (import.meta.env.DEV) return 'http://127.0.0.1:5173'
+  // Locally the members site is the server on this port. A hard-coded
+  // 127.0.0.1 address often is not listening, so the handoff stays on this origin.
+  if (import.meta.env.DEV) return typeof window === 'undefined' ? 'http://localhost:5173' : window.location.origin
   return 'https://check4tech.net'
 }
 

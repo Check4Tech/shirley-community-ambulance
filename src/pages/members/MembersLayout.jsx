@@ -1,6 +1,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { logoutMember, readSession, rigCheckHandoffUrl } from '../../auth/session'
+import { useCohortAccess } from './cohortAccess'
 import './members-area.css'
 
 const TABS = [
@@ -9,11 +10,11 @@ const TABS = [
   { to: '/members/roster', label: 'Members' },
   { to: '/members/students', label: 'Students' },
   { to: '/members/probationary', label: 'Probationary' },
+  { to: '/members/trainings', label: 'Trainings' },
 ]
 
 const FORM_LINKS = [
   { to: '/members/forms/bylaw', label: 'Bylaw proposal' },
-  { to: '/members/forms/uniform', label: 'Uniform request' },
   { to: '/members/forms/reimbursement', label: 'Reimbursement' },
   { to: '/members/forms/bls-preceptor', label: 'BLS preceptor form' },
   { to: '/members/forms/als-preceptor', label: 'ALS preceptor form' },
@@ -177,6 +178,12 @@ export default function MembersLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const session = readSession()
+  const cohort = useCohortAccess()
+  const tabs = TABS.filter((tab) => {
+    if (tab.to === '/members/students') return cohort.students
+    if (tab.to === '/members/probationary') return cohort.probationary
+    return true
+  })
   const rigChecksHref = session ? rigCheckHandoffUrl(session) : null
 
   async function signOut() {
@@ -193,7 +200,7 @@ export default function MembersLayout() {
           </p>
           <nav aria-label="Members">
             <ul>
-              {TABS.map((tab) => (
+              {tabs.map((tab) => (
                 <li key={tab.to}>
                   <NavLink
                     to={tab.to}

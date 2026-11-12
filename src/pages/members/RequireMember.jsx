@@ -3,7 +3,8 @@ import { readSession } from '../../auth/session'
 
 export default function RequireMember({ children }) {
   const location = useLocation()
-  if (!readSession()) {
+  const session = readSession()
+  if (!session || session.hasDefaultPassword) {
     return <Navigate to="/members" replace state={{ from: location.pathname }} />
   }
   return children

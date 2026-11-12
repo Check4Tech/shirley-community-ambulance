@@ -30,6 +30,23 @@ export function canEditPreceptorForm(session, permissions) {
   return isFormAdmin(session) || hasFormsPermission(permissions)
 }
 
+/** A reimbursement grant is PERMISSION_REIMBURSEMENT or PERMISSION_REIMBURSEMENT_EDIT. */
+export const REIMBURSEMENT_PERMISSION = 'PERMISSION_REIMBURSEMENT'
+
+export function hasReimbursementPermission(permissions) {
+  if (!Array.isArray(permissions)) return false
+  return permissions.some(
+    (permission) =>
+      typeof permission === 'string' &&
+      (permission === REIMBURSEMENT_PERMISSION || permission.startsWith(`${REIMBURSEMENT_PERMISSION}_`)),
+  )
+}
+
+/** Approve or edit a submitted reimbursement: admin, forms grant, or reimbursement grant. */
+export function canReviewReimbursement(session, permissions) {
+  return isFormAdmin(session) || hasFormsPermission(permissions) || hasReimbursementPermission(permissions)
+}
+
 export function useFormAccess(enabled = true) {
   const session = useMemo(() => readSession(), [])
   const [permissions, setPermissions] = useState(null)
@@ -69,5 +86,7 @@ export function useFormAccess(enabled = true) {
   return {
     loading: enabled && !admin && permissions === null,
     canEdit: enabled && canEditPreceptorForm(session, permissions),
+    admin,
+    permissions: permissions ?? [],
   }
 }

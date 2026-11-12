@@ -21,6 +21,10 @@
   text-align: center;
 }
 
+.members__card.members__card--credentials {
+  width: min(100%, 440px);
+}
+
 .members__emblem {
   display: block;
   width: 110px;

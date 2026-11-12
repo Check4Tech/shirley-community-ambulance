@@ -2,6 +2,9 @@
 
 export const GRANT_PERMISSION_BY_ENTITY = {
   bylaws: 'PERMISSION_BYLAWS',
+  'training library': 'PERMISSION_TRAINING',
+  students: 'PERMISSION_STUDENTS',
+  probationary: 'PERMISSION_PROBATIONARY',
 }
 
 export const EMS_PERMISSION_MODULES = [
@@ -56,8 +59,10 @@ export const EMS_PERMISSION_MODULES = [
     id: 'organization',
     title: 'Organization',
     standardEntities: ['Users'],
-    singleGrantEntities: ['Bylaws'],
+    alwaysEntities: ['Permissions'],
+    singleGrantEntities: ['Bylaws', 'Training library', 'Students', 'Probationary'],
     calendarEntities: ['Calendar'],
+    boardEntities: ['Message Board'],
   },
 ]
 
@@ -75,17 +80,21 @@ export function visiblePermissionModules({ suppliesSubscribed, bls }) {
       ...mod,
       standardEntities,
       logEntities,
+      alwaysEntities: mod.alwaysEntities ?? [],
       maintenanceEntities: mod.maintenanceEntities ?? [],
       singleGrantEntities: mod.singleGrantEntities ?? [],
       calendarEntities: mod.calendarEntities ?? [],
+      boardEntities: mod.boardEntities ?? [],
     }
   }).filter(
     (mod) =>
       mod.standardEntities.length > 0 ||
+      (mod.alwaysEntities ?? []).length > 0 ||
       mod.logEntities.length > 0 ||
       mod.maintenanceEntities.length > 0 ||
       mod.singleGrantEntities.length > 0 ||
-      (mod.calendarEntities ?? []).length > 0,
+      (mod.calendarEntities ?? []).length > 0 ||
+      (mod.boardEntities ?? []).length > 0,
   )
 }
 

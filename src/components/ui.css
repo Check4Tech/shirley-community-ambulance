@@ -213,17 +213,18 @@
   right: 1rem;
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0;
+  border: 2px solid #c1121f;
+  background: #fff;
+  color: #c1121f;
   cursor: pointer;
 }
-.lightbox__close:hover {
-  background: #fff;
-  color: var(--navy-800);
+.lightbox__close:hover,
+.lightbox__close:focus-visible {
+  background: #c1121f;
+  color: #fff;
 }
 
 /* ---------------------------------------------------------------------------
