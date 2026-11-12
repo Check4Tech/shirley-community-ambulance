@@ -4,6 +4,7 @@ import { readSession } from '../../auth/session'
 import Loader from '../../components/Loader'
 import { memberStatusByValue } from './memberStatus'
 import { writeUserDetailsId } from './userDetailsSelection'
+import { useViewerPermissions } from './userDetailsAccess'
 import AddStudent from './AddStudent'
 import StudentTools from './StudentTools'
 import { isProbationary, isStudent, MEMBER_LIST_FILTERS, useActiveMembers } from './useActiveMembers'
@@ -35,6 +36,7 @@ export default function MembersRoster({ group = 'all' }) {
   const probationary = group === 'probationary'
   const focused = students || probationary
   const ownId = useMemo(() => readSession()?.userId, [])
+  const viewerAccess = useViewerPermissions()
   const subset = students ? isStudent : probationary ? isProbationary : null
   const { status, members, error, notice, loaded } = useActiveMembers({
     list: focused ? 'all' : list,
@@ -135,9 +137,9 @@ export default function MembersRoster({ group = 'all' }) {
               </thead>
               <tbody>
                 {rows.map((member) => {
-                  const opensDetails = focused
-                    ? member.id != null
-                    : member.id != null && String(member.id) === String(ownId)
+                  const opensDetails =
+                    member.id != null &&
+                    (String(member.id) === String(ownId) || viewerAccess.canEditAny)
                   return (
                   <tr
                     key={member.id ?? member.username}

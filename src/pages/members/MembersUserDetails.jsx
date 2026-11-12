@@ -9,6 +9,7 @@ import { BOARD_POSITIONS } from '../../data/boardPositions'
 import { CERTIFICATION_OPTIONS, COUNTRIES, LANGUAGES, LICENSE_TYPES, STATES } from './userDetailsOptions'
 import { formatUsDate } from './memberDates'
 import { readUserDetailsId, writeUserDetailsId } from './userDetailsSelection'
+import { canEditAnyUser, canOpenUserDetails, useViewerPermissions } from './userDetailsAccess'
 import './user-details.css'
 
 const ROLE_USER = 'ROLE_EMS_USER'
@@ -405,7 +406,8 @@ function UserDetailsScreen() {
   const [saveError, setSaveError] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
-  const [viewerPermissions, setViewerPermissions] = useState(null)
+  const viewerAccess = useViewerPermissions()
+  const viewerPermissions = viewerAccess.permissions
   const [adminCount, setAdminCount] = useState(0)
   const [adminLimit, setAdminLimit] = useState(null)
   const [suppliesSubscribed, setSuppliesSubscribed] = useState(false)
@@ -423,23 +425,13 @@ function UserDetailsScreen() {
   useEffect(() => {
     const session = readSession()
     if (!session || !userId) return undefined
-    let cancelled = false
-    authorizedFetch(session, `/user-permissions/${session.userId}`)
-      .then(async ({ response }) => {
-        const body = response.ok ? await response.json() : []
-        if (!cancelled) setViewerPermissions(Array.isArray(body) ? body : [])
-      })
-      .catch(() => {
-        if (!cancelled) setViewerPermissions([])
-      })
-    return () => {
-      cancelled = true
+    if (!canOpenUserDetails(session, userId, viewerPermissions)) {
+      if (viewerAccess.loading) return undefined
+      setPhase('error')
+      setUser(null)
+      setError('You do not have access to this member.')
+      return undefined
     }
-  }, [userId])
-
-  useEffect(() => {
-    const session = readSession()
-    if (!session || !userId) return undefined
     let cancelled = false
 
     async function load() {
@@ -492,7 +484,7 @@ function UserDetailsScreen() {
     return () => {
       cancelled = true
     }
-  }, [userId])
+  }, [userId, viewerPermissions, viewerAccess.loading])
 
   useEffect(() => {
     const session = readSession()
@@ -523,10 +515,11 @@ function UserDetailsScreen() {
 
   const session = readSession()
   const roles = Array.isArray(session?.roles) ? session.roles : []
-  const canEdit =
-    roles.includes(ROLE_ORG_ADMIN) ||
-    roles.includes(ROLE_APP_ADMIN) ||
-    (Array.isArray(viewerPermissions) && viewerPermissions.includes('PERMISSION_USERS_EDIT'))
+  const canEdit = canEditAnyUser(session, viewerPermissions)
+
+  useEffect(() => {
+    if (phase === 'ready' && canEdit) setEditing(true)
+  }, [phase, canEdit, userId])
   const canChangePermissions =
     roles.includes(ROLE_ORG_ADMIN) ||
     roles.includes(ROLE_APP_ADMIN) ||
